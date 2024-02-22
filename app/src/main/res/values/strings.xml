@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Object Detect</string>
+    <string name="app_title">Object Detector</string>
 </resources>
