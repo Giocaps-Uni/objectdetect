@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/buttonsFragment">
+
+    <fragment
+        android:id="@+id/buttonsFragment"
+        android:name="com.example.objectdetect.ButtonsFragment"
+        android:label="fragment_buttons"
+        tools:layout="@layout/fragment_buttons" >
+        <action
+            android:id="@+id/action_buttonsFragment_to_labelerFragment2"
+            app:destination="@id/labelerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/labelerFragment"
+        android:name="com.example.objectdetect.LabelerFragment"
+        android:label="fragment_labeler"
+        tools:layout="@layout/fragment_labeler" />
+</navigation>
