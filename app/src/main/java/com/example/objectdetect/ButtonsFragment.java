@@ -2,6 +2,7 @@ package com.example.objectdetect;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -66,15 +67,15 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        Button buttonLabeler = getActivity().findViewById(R.id.button_labeler);
+        Button buttonLabeler = requireActivity().findViewById(R.id.button_labeler);
         buttonLabeler.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Log.v("BUTTONLABELER",""+ Navigation.findNavController(v));
+        Log.v("BUTTONLABELER", String.valueOf(Navigation.findNavController(v)));
         Navigation.findNavController(v).navigate(R.id.action_buttonsFragment_to_labelerFragment2);
     }
 }

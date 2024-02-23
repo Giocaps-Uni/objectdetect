@@ -4,9 +4,14 @@
     </string>
     <string name="app_explain">
         This application uses a machine learning kit from google
-        to detect objects in images. Take a picture using your
-        camera or load one from the gallery and it will be labeled.
+        to detect objects in images.
     </string>
     <string name="go_to_labeler">Go to \n Labeler</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="close_button_string">Close App</string>
+    <string name="fragment_labeler">
+        This is the object labeler. Take a picture using your
+        camera or load one from the gallery and it will be labeled.
+    </string>
+    <string name="labeler_camera_button_string">Take a picture &#128248;</string>
+    <string name="labeler_gallery_button_string">Load from gallery </string>
 </resources>

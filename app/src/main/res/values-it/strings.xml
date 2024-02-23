@@ -4,9 +4,15 @@
     </string>
     <string name="app_explain">
         Questa applicazione usa un kit di machine learning di google
-        per identificare gli oggetti nelle immagini. Scatta una foto
+        per identificare gli oggetti nelle immagini.
+    </string>
+    <string name="go_to_labeler">Vai al Labeler</string>
+    <string name="close_button_string">Chiudi app</string>
+    <string name="fragment_labeler">
+        Questo è il labeler di oggetti.  Scatta una foto
         con la fotocamera o caricane una dalla galleria e questa sarà
         etichettata.
     </string>
-    <string name="go_to_labeler">Vai al Labeler</string>
+    <string name="labeler_camera_button_string">Scatta una foto &#128248;</string>
+    <string name="labeler_gallery_button_string">Carica dalla galleria</string>
 </resources>

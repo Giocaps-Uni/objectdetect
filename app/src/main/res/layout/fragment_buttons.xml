@@ -11,7 +11,7 @@
         android:layout_width="300dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/button_labeler"
+        android:background="@drawable/buttons_style"
         android:text="@string/go_to_labeler"
         android:textColor="@color/white"
         android:textSize="34sp" />
