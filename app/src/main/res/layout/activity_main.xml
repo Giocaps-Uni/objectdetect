@@ -18,8 +18,9 @@
         <TextView
             android:id="@+id/app_title"
             android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
             android:autoSizeTextType="uniform"
             android:text="@string/app_title"
             android:textAlignment="center"
@@ -31,8 +32,9 @@
         <TextView
             android:id="@+id/app_explain"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="173dp"
             android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
             android:text="@string/app_explain"
             android:textAlignment="center"
             android:textSize="24sp" />
@@ -41,7 +43,9 @@
             android:id="@+id/fragmentContainerView"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="142dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph"
             tools:layout="@layout/fragment_buttons" />

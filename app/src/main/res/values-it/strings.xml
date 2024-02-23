@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Identificatore</string>
-    <string name="app_title">Identificatore di oggetti &#127991;</string>
+    <string name="app_title">Identificatore \n di oggetti &#127991;
+    </string>
     <string name="app_explain">
         Questa applicazione usa un kit di machine learning di google
         per identificare gli oggetti nelle immagini. Scatta una foto
         con la fotocamera o caricane una dalla galleria e questa sarà
         etichettata.
     </string>
-    <string name="go_to_labeler">Vai all\'etichettatore</string>
+    <string name="go_to_labeler">Vai al Labeler</string>
 </resources>

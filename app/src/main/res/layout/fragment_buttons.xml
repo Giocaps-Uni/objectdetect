@@ -8,8 +8,11 @@
 
     <Button
         android:id="@+id/button_labeler"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_labeler"
         android:text="@string/go_to_labeler"
+        android:textColor="@color/white"
         android:textSize="34sp" />
 </FrameLayout>

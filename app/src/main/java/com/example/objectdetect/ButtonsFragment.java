@@ -74,7 +74,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.v("TAG",""+ Navigation.findNavController(v));
+        Log.v("BUTTONLABELER",""+ Navigation.findNavController(v));
         Navigation.findNavController(v).navigate(R.id.action_buttonsFragment_to_labelerFragment2);
     }
 }

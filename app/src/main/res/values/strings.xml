@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Object Detect</string>
-    <string name="app_title">Object Detector &#127991;</string>
+    <string name="app_title">Object \n Detector &#127991;
+    </string>
     <string name="app_explain">
         This application uses a machine learning kit from google
         to detect objects in images. Take a picture using your
         camera or load one from the gallery and it will be labeled.
     </string>
-    <string name="go_to_labeler">Go to Labeler</string>
+    <string name="go_to_labeler">Go to \n Labeler</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
