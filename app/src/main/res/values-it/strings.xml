@@ -8,6 +8,7 @@
     </string>
     <string name="go_to_labeler">Vai al Labeler</string>
     <string name="close_button_string">Chiudi app</string>
+    <string name="fragment_labeler_title">Labeler di oggetti</string>
     <string name="fragment_labeler">
         Questo è il labeler di oggetti.  Scatta una foto
         con la fotocamera o caricane una dalla galleria e questa sarà

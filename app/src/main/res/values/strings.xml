@@ -8,6 +8,7 @@
     </string>
     <string name="go_to_labeler">Go to \n Labeler</string>
     <string name="close_button_string">Close App</string>
+    <string name="fragment_labeler_title">Object Labeler</string>
     <string name="fragment_labeler">
         This is the object labeler. Take a picture using your
         camera or load one from the gallery and it will be labeled.

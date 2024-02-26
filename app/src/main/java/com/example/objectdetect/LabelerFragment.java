@@ -1,18 +1,17 @@
 package com.example.objectdetect;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +58,8 @@ public class LabelerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
+        requireActivity().findViewById(R.id.app_explain).setVisibility(View.GONE);
     }
 
     @Override
@@ -77,5 +78,11 @@ public class LabelerFragment extends Fragment {
         //galleryButton.setOnClickListener(this);
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        requireActivity().findViewById(R.id.app_title).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
+    }
 
 }
