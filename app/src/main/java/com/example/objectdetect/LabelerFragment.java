@@ -1,10 +1,19 @@
 package com.example.objectdetect;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +60,25 @@ public class LabelerFragment extends Fragment {
         return fragment;
     }
 
+    ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
+                    ActivityResultContracts.StartActivityForResult(), result -> {
+                // Add same code that you want to add in onActivityResult method
+                Log.d("Camera", "Camera opened");
+            });
+
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                // Callback is invoked after the user selects a media item or closes the
+                // photo picker.
+                if (uri != null) {
+                    Log.d("PhotoPicker", "Selected URI: " + uri);
+                } else {
+                    Log.d("PhotoPicker", "No media selected");
+                }
+            });
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +101,15 @@ public class LabelerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         Button cameraButton = requireActivity().findViewById(R.id.labeler_camera_button);
-        //cameraButton.setOnClickListener(this);
         Button galleryButton = requireActivity().findViewById(R.id.labeler_gallery_button);
-        //galleryButton.setOnClickListener(this);
+        cameraButton.setOnClickListener(view1 -> {
+            mCameraImage.launch(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE));
+        });
+        galleryButton.setOnClickListener(view2 -> {
+            pickMedia.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
+        });
     }
 
     @Override
@@ -85,4 +119,7 @@ public class LabelerFragment extends Fragment {
         requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
     }
 
+    public void openCamera(View view){
+
+    }
 }

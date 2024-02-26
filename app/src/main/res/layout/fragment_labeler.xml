@@ -46,8 +46,8 @@
 
         <Button
             android:id="@+id/labeler_gallery_button"
-            android:layout_width="242dp"
-            android:layout_height="74dp"
+            android:layout_width="250dp"
+            android:layout_height="77dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:autoSizeTextType="uniform"
