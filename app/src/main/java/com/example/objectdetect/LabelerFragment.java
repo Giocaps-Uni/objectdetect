@@ -2,16 +2,12 @@ package com.example.objectdetect;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -19,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,7 +108,7 @@ public class LabelerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Workaround to simulate fragment fullscreen -> set textview non visible, fragment jumps up
         requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
@@ -127,5 +121,6 @@ public class LabelerFragment extends Fragment {
         requireActivity().findViewById(R.id.app_title).setVisibility(View.VISIBLE);
         requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
     }
+
 
 }

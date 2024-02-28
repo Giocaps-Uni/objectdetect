@@ -15,4 +15,7 @@
     </string>
     <string name="labeler_camera_button_string">Take a picture &#128248;</string>
     <string name="labeler_gallery_button_string">Load from gallery </string>
+    <string name="exit_dialog">Do you want to exit?</string>
+    <string name="yes_string">Yes</string>
+    <string name="no_string">No</string>
 </resources>
