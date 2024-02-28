@@ -1,13 +1,9 @@
 package com.example.objectdetect;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.activity.OnBackPressedDispatcher;
-import androidx.fragment.app.Fragment;
 
-import android.content.DialogInterface;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 

@@ -16,7 +16,5 @@
     </string>
     <string name="labeler_camera_button_string">Scatta una foto &#128248;</string>
     <string name="labeler_gallery_button_string">Carica dalla galleria</string>
-    <string name="exit_dialog">Vuoi chiudere l\'app?</string>
-    <string name="yes_string">Sì</string>
-    <string name="no_string">No</string>
+    <string name="image_preview_title">Anteprima Immagine</string>
 </resources>

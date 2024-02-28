@@ -18,5 +18,14 @@
         android:id="@+id/labelerFragment"
         android:name="com.example.objectdetect.LabelerFragment"
         android:label="fragment_labeler"
-        tools:layout="@layout/fragment_labeler" />
+        tools:layout="@layout/fragment_labeler" >
+        <action
+            android:id="@+id/action_labelerFragment_to_imagePreviewFragment"
+            app:destination="@id/imagePreviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imagePreviewFragment"
+        android:name="com.example.objectdetect.ImagePreviewFragment"
+        android:label="fragment_image_preview"
+        tools:layout="@layout/fragment_image_preview" />
 </navigation>

@@ -9,6 +9,7 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,9 +58,10 @@ public class LabelerFragment extends Fragment {
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
                 // Add same code that you want to add in onActivityResult method
-                Log.d("CAMERA", "Camera closed");
-                requireActivity().findViewById(R.id.labeler_camera_button).setVisibility(View.GONE);
-                requireActivity().findViewById(R.id.labeler_gallery_button).setVisibility(View.GONE);
+            Log.d("CAMERA", "Camera closed");
+
+            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                    .navigate(R.id.action_labelerFragment_to_imagePreviewFragment);
             });
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
