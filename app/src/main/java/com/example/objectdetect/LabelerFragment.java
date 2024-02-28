@@ -58,6 +58,8 @@ public class LabelerFragment extends Fragment {
                     ActivityResultContracts.StartActivityForResult(), result -> {
                 // Add same code that you want to add in onActivityResult method
                 Log.d("CAMERA", "Camera closed");
+                requireActivity().findViewById(R.id.labeler_camera_button).setVisibility(View.GONE);
+                requireActivity().findViewById(R.id.labeler_gallery_button).setVisibility(View.GONE);
             });
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =

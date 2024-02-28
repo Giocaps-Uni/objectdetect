@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.OnBackPressedDispatcher;
+import androidx.fragment.app.Fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,23 +17,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(R.string.app_name);
-                builder.setMessage(R.string.exit_dialog)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.yes_string, (dialog, id) -> finish())
-                        .setNegativeButton(R.string.no_string, (dialog, id) -> dialog.cancel());
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        });
+
     }
-
-
-
 
 
     @Override
@@ -48,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         Log.d("ACTIVITY","onResume");
     }
     @Override
