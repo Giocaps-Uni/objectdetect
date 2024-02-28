@@ -1,5 +1,6 @@
 package com.example.objectdetect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 
 import java.util.Objects;
@@ -63,7 +63,7 @@ public class LabelerFragment extends Fragment {
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
                 // Add same code that you want to add in onActivityResult method
-                Log.d("Camera", "Camera opened");
+                Log.d("CAMERA", "Camera closed");
             });
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -71,9 +71,9 @@ public class LabelerFragment extends Fragment {
                 // Callback is invoked after the user selects a media item or closes the
                 // photo picker.
                 if (uri != null) {
-                    Log.d("PhotoPicker", "Selected URI: " + uri);
+                    Log.d("PHOTOPICKER", "Selected URI: " + uri);
                 } else {
-                    Log.d("PhotoPicker", "No media selected");
+                    Log.d("PHOTOPICKER", "No media selected");
                 }
             });
 
@@ -86,8 +86,7 @@ public class LabelerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.app_explain).setVisibility(View.GONE);
+
     }
 
     @Override
@@ -104,22 +103,29 @@ public class LabelerFragment extends Fragment {
         Button galleryButton = requireActivity().findViewById(R.id.labeler_gallery_button);
         cameraButton.setOnClickListener(view1 -> {
             mCameraImage.launch(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE));
+            Log.d("CAMERA", "Camera opened");
         });
         galleryButton.setOnClickListener(view2 -> {
             pickMedia.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
+            Log.d("PHOTOPICKER", "PhotoPicker Opened");
         });
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // Workaround to simulate fragment fullscreen -> set textview non visible, fragment jumps up
+        requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
+        requireActivity().findViewById(R.id.app_explain).setVisibility(View.GONE);
+    }
+    @Override
     public void onDetach() {
         super.onDetach();
+        // Workaround to simulate fragment fullscreen -> set textview visible again
         requireActivity().findViewById(R.id.app_title).setVisibility(View.VISIBLE);
         requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
     }
 
-    public void openCamera(View view){
-
-    }
 }
