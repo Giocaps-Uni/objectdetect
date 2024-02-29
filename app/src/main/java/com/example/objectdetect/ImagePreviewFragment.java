@@ -1,18 +1,26 @@
 package com.example.objectdetect;
 
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ImagePreviewFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Objects;
+
+
 public class ImagePreviewFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -23,6 +31,8 @@ public class ImagePreviewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ImageView imageView;
 
     public ImagePreviewFragment() {
         // Required empty public constructor
@@ -46,6 +56,14 @@ public class ImagePreviewFragment extends Fragment {
         return fragment;
     }
 
+    public static Bitmap to4BytesPerPixelBitmap(@NonNull final Bitmap input){
+        final Bitmap bitmap = Bitmap.createBitmap(input.getWidth(), input.getHeight(), Bitmap.Config.ARGB_8888);
+        // Instantiate the canvas to draw on:
+        final Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(input, 0, 0, null);
+        // Return the new bitmap:
+        return bitmap;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +71,28 @@ public class ImagePreviewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+            Bitmap result = bundle.getParcelable("BitmapImage");
+            assert result != null;
+            //To use only for preview, post necessary to get width and height
+            //TODO Check orientation of images
+            imageView.post(() -> {
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, imageView.getWidth(),
+                        imageView.getHeight());
+                imageView.setImageBitmap(thumbnail);
+            });
+
+
+        });
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_image_preview, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_image_preview, container, false);
+        imageView = (ImageView) rootView.findViewById(R.id.imagePreview);
+        return rootView;
     }
 }

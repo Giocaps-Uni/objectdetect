@@ -2,6 +2,9 @@ package com.example.objectdetect;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -11,11 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,13 +63,39 @@ public class LabelerFragment extends Fragment {
         return fragment;
     }
 
+    private Bitmap uriToBitmap(Uri selectedFileUri) {
+        try {
+            ParcelFileDescriptor parcelFileDescriptor =
+                    requireActivity().getContentResolver().openFileDescriptor(selectedFileUri, "r");
+            assert parcelFileDescriptor != null;
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    protected void passImageToFragment(Bitmap image) {
+        Bundle result = new Bundle();
+        result.putParcelable("BitmapImage", image);
+        getParentFragmentManager().setFragmentResult("requestKey", result);
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                .navigate(R.id.action_labelerFragment_to_imagePreviewFragment);
+    }
+
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
                 // Add same code that you want to add in onActivityResult method
             Log.d("CAMERA", "Camera closed");
-
-            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
-                    .navigate(R.id.action_labelerFragment_to_imagePreviewFragment);
+        if(result.getData()!=null) {
+            Bitmap image = (Bitmap) Objects.requireNonNull(result.getData().getExtras()).get("data");
+            passImageToFragment(image);
+        }
+        else {
+            Log.d("CAMERA", "Null photo");
+        }
             });
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -70,6 +104,8 @@ public class LabelerFragment extends Fragment {
                 // photo picker.
                 if (uri != null) {
                     Log.d("PHOTOPICKER", "Selected URI: " + uri);
+                    Bitmap image = uriToBitmap(uri);
+                    passImageToFragment(image);
                 } else {
                     Log.d("PHOTOPICKER", "No media selected");
                 }
