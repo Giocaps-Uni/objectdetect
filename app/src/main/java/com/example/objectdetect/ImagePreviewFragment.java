@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -85,10 +86,7 @@ public class ImagePreviewFragment extends Fragment {
                         imageView.getHeight());
                 imageView.setImageBitmap(thumbnail);
             });
-
-
         });
-
     }
 
     @Override
@@ -113,4 +111,23 @@ public class ImagePreviewFragment extends Fragment {
 
         return rootView;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Button chooseAnother = requireActivity().findViewById(R.id.button_choose_another);
+        Button launchLabeler = requireActivity().findViewById(R.id.button_launch_labeler);
+
+        chooseAnother.setOnClickListener(view1 -> {
+            imageView.setImageDrawable(null);
+            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                    .navigate(R.id.action_imagePreviewFragment_to_labelerFragment);
+        });
+
+        launchLabeler.setOnClickListener(view2 -> {
+            //pass
+        });
+    }
+
 }
+

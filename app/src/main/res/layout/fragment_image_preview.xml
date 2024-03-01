@@ -32,6 +32,30 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_launcher_background" />
 
+        <Button
+            android:id="@+id/button_launch_labeler"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/buttons_style"
+            android:text="@string/launch_labeler"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/button_choose_another"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/buttons_style"
+            android:text="@string/choose_another"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
     </LinearLayout>
 
 </FrameLayout>

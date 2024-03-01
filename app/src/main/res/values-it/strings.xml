@@ -17,4 +17,6 @@
     <string name="labeler_camera_button_string">Scatta una foto &#128248;</string>
     <string name="labeler_gallery_button_string">Carica dalla galleria</string>
     <string name="image_preview_title">Anteprima Immagine</string>
+    <string name="launch_labeler">Lancia Labeler</string>
+    <string name="choose_another">Scegli un\'altra foto</string>
 </resources>
