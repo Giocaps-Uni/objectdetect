@@ -1,5 +1,6 @@
 package com.example.objectdetect;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +24,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+
 import java.util.Objects;
+
 
 
 public class ImagePreviewFragment extends Fragment {
@@ -38,6 +42,7 @@ public class ImagePreviewFragment extends Fragment {
     private String mParam2;
 
     private ImageView imageView;
+    private Bitmap result;
 
     public ImagePreviewFragment() {
         // Required empty public constructor
@@ -61,14 +66,8 @@ public class ImagePreviewFragment extends Fragment {
         return fragment;
     }
 
-    public static Bitmap to4BytesPerPixelBitmap(@NonNull final Bitmap input){
-        final Bitmap bitmap = Bitmap.createBitmap(input.getWidth(), input.getHeight(), Bitmap.Config.ARGB_8888);
-        // Instantiate the canvas to draw on:
-        final Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(input, 0, 0, null);
-        // Return the new bitmap:
-        return bitmap;
-    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,14 +76,15 @@ public class ImagePreviewFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
-            Bitmap result = bundle.getParcelable("BitmapImage");
+            result = bundle.getParcelable("BitmapImage");
             assert result != null;
             //To use only for preview, post necessary to get width and height
-            //TODO Check orientation of images
+
             imageView.post(() -> {
                 Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, imageView.getWidth(),
                         imageView.getHeight());
-                imageView.setImageBitmap(thumbnail);
+                Glide.with(this).asBitmap().load(thumbnail).into(imageView);
+
             });
         });
     }
@@ -130,4 +130,5 @@ public class ImagePreviewFragment extends Fragment {
     }
 
 }
+
 

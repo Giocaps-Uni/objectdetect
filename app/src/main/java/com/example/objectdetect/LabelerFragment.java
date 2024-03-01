@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -85,6 +87,13 @@ public class LabelerFragment extends Fragment {
                 .navigate(R.id.action_labelerFragment_to_imagePreviewFragment);
     }
 
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
+    }
+
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
                 // Add same code that you want to add in onActivityResult method
@@ -105,7 +114,30 @@ public class LabelerFragment extends Fragment {
                 if (uri != null) {
                     Log.d("PHOTOPICKER", "Selected URI: " + uri);
                     Bitmap image = uriToBitmap(uri);
-                    passImageToFragment(image);
+                    try {
+                        ExifInterface exif = new ExifInterface(
+                                Objects.requireNonNull(this.requireContext().getContentResolver()
+                                        .openInputStream(uri))
+                        );
+                        int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_NORMAL);
+                        int rotationInDegrees = exifToDegrees(rotation);
+                        Matrix matrix = new Matrix();
+                        if (rotation != 0) {
+                            matrix.preRotate(rotationInDegrees);
+                        }
+
+                        assert image != null;
+                        Bitmap adjustedBitmap = Bitmap.createBitmap(image, 0, 0,
+                                image.getWidth(), image.getHeight(), matrix, true);
+                        passImageToFragment(adjustedBitmap);
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+                    //passImageToFragment(image);
                 } else {
                     Log.d("PHOTOPICKER", "No media selected");
                 }
