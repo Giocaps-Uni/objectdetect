@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 
@@ -13,10 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.Objects;
 
@@ -93,6 +97,20 @@ public class ImagePreviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_image_preview, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.imagePreview);
+
+        // Dynamical calculation of imageview size based on screen size
+        Display display = requireActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+        params.width = (int) (0.85*screenWidth);
+        params.height = (int) (0.4*screenHeight);
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+        params.topMargin = 50;
+        imageView.setLayoutParams(params);
+
         return rootView;
     }
 }
