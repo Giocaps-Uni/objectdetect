@@ -40,7 +40,9 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("com.google.mlkit:image-labeling:17.0.8")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("org.robovm:robovm-rt:0.0.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 }
