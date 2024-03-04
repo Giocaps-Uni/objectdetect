@@ -7,6 +7,7 @@
     tools:context=".ImagePreviewFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -80,6 +81,15 @@
             android:text="@string/choose_another"
             android:textColor="@color/white"
             android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="300dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            tools:visibility="gone" />
 
     </LinearLayout>
 

@@ -19,4 +19,5 @@
     <string name="launch_labeler">Launch Labeler</string>
     <string name="choose_another">Choose another image</string>
     <string name="confidence_text">Choose confidence</string>
+    <string name="labels_title">Labels (scroll)</string>
 </resources>

@@ -20,4 +20,5 @@
     <string name="launch_labeler">Lancia Labeler</string>
     <string name="choose_another">Scegli un\'altra foto</string>
     <string name="confidence_text">Scegli Confidenza</string>
+    <string name="labels_title">Etichette (scorri)</string>
 </resources>
