@@ -19,4 +19,5 @@
     <string name="image_preview_title">Anteprima Immagine</string>
     <string name="launch_labeler">Lancia Labeler</string>
     <string name="choose_another">Scegli un\'altra foto</string>
+    <string name="confidence_text">Scegli Confidenza</string>
 </resources>

@@ -1,16 +1,11 @@
 package com.example.objectdetect;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Point;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -26,18 +21,12 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.slider.Slider;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.label.ImageLabeler;
 import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
-
-import java.util.List;
-import java.util.Objects;
-
-
 
 public class ImagePreviewFragment extends Fragment {
 
@@ -52,6 +41,7 @@ public class ImagePreviewFragment extends Fragment {
 
     private ImageView imageView;
     private Bitmap result;
+    private Slider confSlider;
 
     public ImagePreviewFragment() {
         // Required empty public constructor
@@ -106,7 +96,7 @@ public class ImagePreviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_image_preview, container, false);
         imageView = rootView.findViewById(R.id.imagePreview);
-
+        confSlider = rootView.findViewById(R.id.confidenceSlider);
         // Dynamical calculation of imageview size based on screen size
         Display display = requireActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -137,25 +127,22 @@ public class ImagePreviewFragment extends Fragment {
 
         launchLabeler.setOnClickListener(view2 -> {
             InputImage image = InputImage.fromBitmap(result, 0);
-            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+            float confidence = confSlider.getValue();
+            Log.d("CONFIDENCE", String.valueOf(confidence));
+            ImageLabelerOptions options =
+            new ImageLabelerOptions.Builder()
+                     .setConfidenceThreshold(confidence)
+                     .build();
+            ImageLabeler labeler = ImageLabeling.getClient(options);
+
             labeler.process(image)
-                    .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
-                        @Override
-                        public void onSuccess(List<ImageLabel> labels) {
-                            // Task completed successfully
-                            // ...
-                            for (ImageLabel label : labels) {
-                                String text = label.getText();
-                                Log.d("TEXT", text);
-                            }
-                            }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("EXCEPTION", e.toString());
-                        }
-                    });
+                .addOnSuccessListener(labels -> {
+                    // Task completed successfully
+                    for (ImageLabel label : labels) {
+                        String text = label.getText();
+                        Log.d("TEXT", text);
+                    }
+                }).addOnFailureListener(e -> Log.d("EXCEPTION", e.toString()));
         });
     }
 

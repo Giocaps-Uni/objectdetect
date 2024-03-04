@@ -18,4 +18,5 @@
     <string name="image_preview_title">Image Preview</string>
     <string name="launch_labeler">Launch Labeler</string>
     <string name="choose_another">Choose another image</string>
+    <string name="confidence_text">Choose confidence</string>
 </resources>

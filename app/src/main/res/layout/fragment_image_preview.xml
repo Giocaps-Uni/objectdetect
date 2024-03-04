@@ -32,6 +32,31 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_launcher_background" />
 
+        <TextView
+            android:id="@+id/confidenceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center_horizontal"
+            android:text="@string/confidence_text"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="@string/confidence_text" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/confidenceSlider"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:value="0.7"
+            android:valueFrom="0"
+            android:valueTo="1" />
+
         <Button
             android:id="@+id/button_launch_labeler"
             android:layout_width="200dp"
