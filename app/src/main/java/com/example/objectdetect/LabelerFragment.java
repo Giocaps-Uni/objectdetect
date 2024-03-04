@@ -150,16 +150,17 @@ public class LabelerFragment extends Fragment {
 
                     Bitmap image = uriToBitmap(uri);
                     // Load bitmap into cache
-                    loadBitmap(uri, image);
+                   loadBitmap(uri, image);
 
                     try {
                         ExifInterface exif = new ExifInterface(
                                 Objects.requireNonNull(this.requireContext().getContentResolver()
                                         .openInputStream(uri))
                         );
-
+                        //TODO insert loading animation
                         TaskRunner taskRunner = new TaskRunner();
                         taskRunner.executeAsync(new MatrixCalculator(exif), (matrix) -> {
+
                             assert image != null;
                             Bitmap adjustedBitmap = Bitmap.createBitmap(image, 0, 0,
                                     image.getWidth(), image.getHeight(), matrix, true);

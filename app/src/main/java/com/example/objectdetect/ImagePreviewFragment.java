@@ -25,7 +25,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -75,7 +84,8 @@ public class ImagePreviewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        getParentFragmentManager().setFragmentResultListener("requestKey", this, (requestKey, bundle) -> {
+        getParentFragmentManager().setFragmentResultListener("requestKey",
+                this, (requestKey, bundle) -> {
             result = bundle.getParcelable("BitmapImage");
             assert result != null;
             //To use only for preview, post necessary to get width and height
@@ -83,7 +93,8 @@ public class ImagePreviewFragment extends Fragment {
             imageView.post(() -> {
                 Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, imageView.getWidth(),
                         imageView.getHeight());
-                Glide.with(this).asBitmap().load(thumbnail).into(imageView);
+                Glide.with(this).asBitmap().load(thumbnail).
+                        diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
 
             });
         });
@@ -94,7 +105,7 @@ public class ImagePreviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_image_preview, container, false);
-        imageView = (ImageView) rootView.findViewById(R.id.imagePreview);
+        imageView = rootView.findViewById(R.id.imagePreview);
 
         // Dynamical calculation of imageview size based on screen size
         Display display = requireActivity().getWindowManager().getDefaultDisplay();
@@ -125,7 +136,26 @@ public class ImagePreviewFragment extends Fragment {
         });
 
         launchLabeler.setOnClickListener(view2 -> {
-            //pass
+            InputImage image = InputImage.fromBitmap(result, 0);
+            ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+            labeler.process(image)
+                    .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+                        @Override
+                        public void onSuccess(List<ImageLabel> labels) {
+                            // Task completed successfully
+                            // ...
+                            for (ImageLabel label : labels) {
+                                String text = label.getText();
+                                Log.d("TEXT", text);
+                            }
+                            }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("EXCEPTION", e.toString());
+                        }
+                    });
         });
     }
 
