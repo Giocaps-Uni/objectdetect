@@ -20,4 +20,5 @@
     <string name="choose_another">Choose another image</string>
     <string name="confidence_text">Choose confidence</string>
     <string name="labels_title">Labels (scroll)</string>
+    <string name="save_to_db">Save to DB</string>
 </resources>

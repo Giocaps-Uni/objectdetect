@@ -125,13 +125,11 @@ public class LabelerFragment extends Fragment {
         taskRunner.executeAsync(new BitmapLoaderTask(imageKey, image), (Null) -> {
             Log.d("CACHING", String.valueOf(memoryCache.size()));
         });
-
     }
 
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
-                // Add same code that you want to add in onActivityResult method
-            Log.d("CAMERA", "Camera closed");
+        Log.d("CAMERA", "Camera closed");
         if(result.getData()!=null) {
             Bitmap image = (Bitmap) Objects.requireNonNull(result.getData().getExtras()).get("data");
             passImageToFragment(image);
@@ -139,7 +137,7 @@ public class LabelerFragment extends Fragment {
         else {
             Log.d("CAMERA", "Null photo");
         }
-            });
+    });
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -150,7 +148,7 @@ public class LabelerFragment extends Fragment {
 
                     Bitmap image = uriToBitmap(uri);
                     // Load bitmap into cache
-                   loadBitmap(uri, image);
+                   //loadBitmap(uri, image);
 
                     try {
                         ExifInterface exif = new ExifInterface(
@@ -164,6 +162,7 @@ public class LabelerFragment extends Fragment {
                             assert image != null;
                             Bitmap adjustedBitmap = Bitmap.createBitmap(image, 0, 0,
                                     image.getWidth(), image.getHeight(), matrix, true);
+
                             passImageToFragment(adjustedBitmap);
                         });
 
@@ -172,12 +171,11 @@ public class LabelerFragment extends Fragment {
                     }
 
 
-                    //passImageToFragment(image);
+
                 } else {
                     Log.d("PHOTOPICKER", "No media selected");
                 }
             });
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

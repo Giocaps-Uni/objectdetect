@@ -6,6 +6,7 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -126,7 +127,40 @@ public class ImagePreviewFragment extends Fragment {
 
         return rootView;
     }
-    //todo add buttons to save into database
+
+    protected void goToLabelerFragment() {
+        imageView.setImageDrawable(null);
+        Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                .navigate(R.id.action_imagePreviewFragment_to_labelerFragment);
+    }
+
+    //todo insert data in database
+    protected void saveToDB(){
+        //pass
+    }
+
+    protected void injectButton(boolean isSaveButton) {
+        Button button = new Button(requireContext());
+        button.setTextColor(getResources().getColor(R.color.white, null));
+        button.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.buttons_style));
+        button.setTextSize(18);
+        button.setHeight(50);
+        if (isSaveButton) {
+            button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+            button.setText(R.string.save_to_db);
+            button.setOnClickListener(v1 -> saveToDB());
+        }
+        else {
+            button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 20, 0, 0);
+            button.setLayoutParams(params);
+            button.setText(R.string.choose_another);
+            button.setOnClickListener(v2 -> goToLabelerFragment());
+        }
+        linearLayout.addView(button);
+    }
     protected void showResults(List<ImageLabel> labels) {
         launchButton.setVisibility(View.GONE);
         chooseConf.setVisibility(View.GONE);
@@ -142,10 +176,14 @@ public class ImagePreviewFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recView.setLayoutManager(layoutManager);
-
         CustomAdapter adapter = new CustomAdapter(labels,requireContext());
         recView.setAdapter(adapter);
         recView.setVisibility(View.VISIBLE);
+
+        injectButton(true);
+        injectButton(false);
+
+
     }
     protected void launchLabeler() {
         InputImage image = InputImage.fromBitmap(result, 0);
@@ -156,7 +194,6 @@ public class ImagePreviewFragment extends Fragment {
                         .setConfidenceThreshold(confidence)
                         .build();
         ImageLabeler labeler = ImageLabeling.getClient(options);
-
         labeler.process(image)
                 .addOnSuccessListener(labels -> {
                     // Task completed successfully
@@ -165,7 +202,6 @@ public class ImagePreviewFragment extends Fragment {
                         Log.d("TEXT", text);
                     }
                     showResults(labels);
-
                 }).addOnFailureListener(e -> Log.d("EXCEPTION", e.toString()));
     }
 
@@ -173,15 +209,9 @@ public class ImagePreviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        chooseAnother.setOnClickListener(view1 -> {
-            imageView.setImageDrawable(null);
-            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
-                    .navigate(R.id.action_imagePreviewFragment_to_labelerFragment);
-        });
+        chooseAnother.setOnClickListener(view1 -> goToLabelerFragment());
 
-        launchButton.setOnClickListener(view2 -> {
-            launchLabeler();
-        });
+        launchButton.setOnClickListener(view2 -> launchLabeler());
     }
 
 }

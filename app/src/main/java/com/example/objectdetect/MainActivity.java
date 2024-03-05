@@ -9,10 +9,14 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
+    public ImagesDatabase imagesDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        imagesDB = ImagesDatabase.getInstance(this);
 
     }
 
