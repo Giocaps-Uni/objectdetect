@@ -174,7 +174,6 @@ public class ImagePreviewFragment extends Fragment {
                     public void onError(Throwable e) {
                     }
                 });
-
     }
 
     protected void injectButton(boolean isSaveButton, List<ImageLabel> labels, float confidence) {
