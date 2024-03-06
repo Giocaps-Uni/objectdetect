@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {LabeledImage.class}, version = 1)
-@TypeConverters({BitmapConverters.class})
+@TypeConverters({Converters.class})
 public abstract class ImagesDatabase extends RoomDatabase {
     private static volatile ImagesDatabase INSTANCE;
 
@@ -19,7 +19,7 @@ public abstract class ImagesDatabase extends RoomDatabase {
             synchronized (ImagesDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    ImagesDatabase.class, "Images.db")
+                                    ImagesDatabase.class, "images.db")
                             .build();
                 }
             }

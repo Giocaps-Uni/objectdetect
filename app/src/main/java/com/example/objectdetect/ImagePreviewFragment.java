@@ -1,8 +1,11 @@
 package com.example.objectdetect;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,7 +35,15 @@ import com.google.mlkit.vision.label.ImageLabeler;
 import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
+import java.util.Locale;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ImagePreviewFragment extends Fragment {
 
@@ -74,8 +85,6 @@ public class ImagePreviewFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,11 +144,40 @@ public class ImagePreviewFragment extends Fragment {
     }
 
     //todo insert data in database
-    protected void saveToDB(){
-        //pass
+    protected void saveToDBAndFileSystem(List<ImageLabel> labels, float confidence){
+        ContextWrapper cw = new ContextWrapper(requireActivity().getApplicationContext());
+        // Save image in app specific folder
+        String filename = String.format(Locale.ITALY, "%d.png", System.currentTimeMillis());
+        try (FileOutputStream fileOutputStream = cw.openFileOutput(filename, Context.MODE_PRIVATE)) {
+                 result.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                 Log.d("SAVE_IMAGE", "File saved in " + cw.getFilesDir());
+        } catch (Exception e) {
+            Log.e("SAVE_IMAGE", e.getMessage(), e);
+        }
+
+        Uri uri = Uri.fromFile(new File(cw.getFilesDir(), filename));
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        ImagesDatabase imagesDB = mainActivity.imagesDB;
+        ImagesDao imagesDao = imagesDB.imagesDao();
+        imagesDao.insertImage(new LabeledImage(uri, labels, confidence))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+                    @Override
+                    public void onSuccess(Long aLong) {
+                        Log.d("INSERT", "INSERT COMPLETED");
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+
     }
 
-    protected void injectButton(boolean isSaveButton) {
+    protected void injectButton(boolean isSaveButton, List<ImageLabel> labels, float confidence) {
         Button button = new Button(requireContext());
         button.setTextColor(getResources().getColor(R.color.white, null));
         button.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.buttons_style));
@@ -148,7 +186,7 @@ public class ImagePreviewFragment extends Fragment {
         if (isSaveButton) {
             button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             button.setText(R.string.save_to_db);
-            button.setOnClickListener(v1 -> saveToDB());
+            button.setOnClickListener(v1 -> saveToDBAndFileSystem(labels, confidence));
         }
         else {
             button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
@@ -161,7 +199,7 @@ public class ImagePreviewFragment extends Fragment {
         }
         linearLayout.addView(button);
     }
-    protected void showResults(List<ImageLabel> labels) {
+    protected void showResults(List<ImageLabel> labels, float confidence) {
         launchButton.setVisibility(View.GONE);
         chooseConf.setVisibility(View.GONE);
         confSlider.setVisibility(View.GONE);
@@ -180,8 +218,8 @@ public class ImagePreviewFragment extends Fragment {
         recView.setAdapter(adapter);
         recView.setVisibility(View.VISIBLE);
 
-        injectButton(true);
-        injectButton(false);
+        injectButton(true, labels, confidence);
+        injectButton(false, labels, confidence);
 
 
     }
@@ -201,7 +239,7 @@ public class ImagePreviewFragment extends Fragment {
                         String text = label.getText();
                         Log.d("TEXT", text);
                     }
-                    showResults(labels);
+                    showResults(labels, confidence);
                 }).addOnFailureListener(e -> Log.d("EXCEPTION", e.toString()));
     }
 

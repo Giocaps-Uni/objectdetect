@@ -1,7 +1,6 @@
 package com.example.objectdetect;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import androidx.room.TypeConverter;
 
@@ -9,12 +8,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.mlkit.vision.label.ImageLabel;
 
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class BitmapConverters {
-
+public class Converters {
+    /*
     @TypeConverter
     public static byte[] bitmapToByteArray(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -24,6 +22,16 @@ public class BitmapConverters {
     @TypeConverter
     public static Bitmap byteArrayToBitmap(byte[] byteArray) {
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    }
+    */
+    @TypeConverter
+    public static String uriToString(Uri uri) {
+        return uri.toString();
+    }
+
+    @TypeConverter
+    public static Uri stringToUri(String uriString) {
+        return Uri.parse(uriString);
     }
 
     @TypeConverter
