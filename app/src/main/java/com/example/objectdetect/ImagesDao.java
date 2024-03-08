@@ -17,7 +17,7 @@ public interface ImagesDao {
     Single<Long> insertImage(LabeledImage image);
 
     @Query("SELECT * FROM LabeledImage")
-    List<LabeledImage> getAll();
+    Single<List<LabeledImage>>  getAll();
 
 
 }

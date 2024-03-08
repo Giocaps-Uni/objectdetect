@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.slider.Slider;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -60,7 +61,7 @@ public class ImagePreviewFragment extends Fragment {
     private TextView chooseConf;
     private Bitmap result;
     private Slider confSlider;
-    private Button launchButton, chooseAnother;
+    private Button launchButton, chooseAnother, goToDBButton;
     private RecyclerView recView;
     private LinearLayout linearLayout;
 
@@ -143,7 +144,7 @@ public class ImagePreviewFragment extends Fragment {
                 .navigate(R.id.action_imagePreviewFragment_to_labelerFragment);
     }
 
-    //todo insert data in database
+    //todo check thread usages
     protected void saveToDBAndFileSystem(List<ImageLabel> labels, float confidence){
         ContextWrapper cw = new ContextWrapper(requireActivity().getApplicationContext());
         // Save image in app specific folder
@@ -169,6 +170,13 @@ public class ImagePreviewFragment extends Fragment {
                     @Override
                     public void onSuccess(Long aLong) {
                         Log.d("INSERT", "INSERT COMPLETED");
+                        Snackbar.make(requireView().findViewById(R.id.gotodb_button_id),
+                                R.string.snackbar_insert, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.action_text, v -> {
+                                    Navigation.findNavController(requireActivity(),
+                                        R.id.fragmentContainerView).navigate(
+                                                R.id.action_imagePreviewFragment_to_itemFragment);
+                                }).show();
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -182,13 +190,13 @@ public class ImagePreviewFragment extends Fragment {
         button.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.buttons_style));
         button.setTextSize(18);
         button.setHeight(50);
+        button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         if (isSaveButton) {
-            button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             button.setText(R.string.save_to_db);
             button.setOnClickListener(v1 -> saveToDBAndFileSystem(labels, confidence));
+            button.setId(R.id.gotodb_button_id);
         }
         else {
-            button.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 20, 0, 0);

@@ -21,4 +21,9 @@
     <string name="confidence_text">Choose confidence</string>
     <string name="labels_title">Labels (scroll)</string>
     <string name="save_to_db">Save to DB</string>
+    <string name="snackbar_insert">Inserted successfully</string>
+    <string name="action_text">Go to DB</string>
+    <string name="database_text">Database</string>
+    <string name="database_legend_text">\t\t\t Image \t\t\t\t\t\t\t\t\t\t\t Labels
+        \t\t\t\t\t\t\tConf</string>
 </resources>

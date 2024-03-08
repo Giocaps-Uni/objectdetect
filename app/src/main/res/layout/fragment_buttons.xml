@@ -6,14 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ButtonsFragment">
 
-    <Button
-        android:id="@+id/button_labeler"
-        android:layout_width="300dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:autoSizeTextType="uniform"
-        android:background="@drawable/buttons_style"
-        android:text="@string/go_to_labeler"
-        android:textColor="@color/white"
-        android:textSize="34sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_labeler"
+            android:layout_width="300dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:autoSizeTextType="none"
+            android:background="@drawable/buttons_style"
+            android:text="@string/go_to_labeler"
+            android:textColor="@color/white"
+            android:textSize="34sp" />
+
+        <Button
+            android:id="@+id/gotodatabase"
+            android:layout_width="300dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:autoSizeTextType="none"
+            android:background="@drawable/buttons_style"
+            android:text="@string/action_text"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="34sp" />
+    </LinearLayout>
+
 </FrameLayout>

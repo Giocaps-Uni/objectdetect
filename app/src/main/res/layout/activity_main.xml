@@ -30,6 +30,32 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/database_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:autoSizeTextType="uniform"
+            android:text="@string/database_text"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="#F44336"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/database_legend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
+            android:text="@string/database_legend_text"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <TextView
             android:id="@+id/app_explain"
             android:layout_width="match_parent"
             android:layout_height="173dp"

@@ -72,12 +72,21 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         Button buttonLabeler = requireActivity().findViewById(R.id.button_labeler);
-        buttonLabeler.setOnClickListener(this);
+        Button buttonGotodb = requireActivity().findViewById(R.id.gotodatabase);
+        buttonLabeler.setOnClickListener(v1 -> {
+            Log.v("BUTTONLABELER", String.valueOf(Navigation.findNavController(view)));
+            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                    .navigate(R.id.action_buttonsFragment_to_labelerFragment2);
+        });
+        buttonGotodb.setOnClickListener(v2 -> {
+            Log.v("BUTTONGOTODB", String.valueOf(Navigation.findNavController(view)));
+            Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                    .navigate(R.id.action_buttonsFragment_to_itemFragment);
+        });
     }
 
     @Override
     public void onClick(View v) {
-        Log.v("BUTTONLABELER", String.valueOf(Navigation.findNavController(v)));
-        Navigation.findNavController(v).navigate(R.id.action_buttonsFragment_to_labelerFragment2);
+
     }
 }

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_buttonsFragment_to_labelerFragment2"
             app:destination="@id/labelerFragment" />
+        <action
+            android:id="@+id/action_buttonsFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
     </fragment>
     <fragment
         android:id="@+id/labelerFragment"
@@ -31,5 +34,13 @@
         <action
             android:id="@+id/action_imagePreviewFragment_to_labelerFragment"
             app:destination="@id/labelerFragment" />
+        <action
+            android:id="@+id/action_imagePreviewFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/itemFragment"
+        android:name="com.example.objectdetect.ItemFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_item_list" />
 </navigation>
