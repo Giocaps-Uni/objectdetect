@@ -149,12 +149,12 @@ public class ImagePreviewFragment extends Fragment {
         ContextWrapper cw = new ContextWrapper(requireActivity().getApplicationContext());
         // Save image in app specific folder
         String filename = String.format(Locale.ITALY, "%d.png", System.currentTimeMillis());
-        try (FileOutputStream fileOutputStream = cw.openFileOutput(filename, Context.MODE_PRIVATE)) {
-                 result.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-                 Log.d("SAVE_IMAGE", "File saved in " + cw.getFilesDir());
-        } catch (Exception e) {
-            Log.e("SAVE_IMAGE", e.getMessage(), e);
-        }
+
+
+        TaskRunner taskRunner = new TaskRunner();
+        taskRunner.executeAsync(new FileSaver(filename, cw, result), (Null) -> {
+
+        });
 
         Uri uri = Uri.fromFile(new File(cw.getFilesDir(), filename));
         MainActivity mainActivity = (MainActivity) requireActivity();
