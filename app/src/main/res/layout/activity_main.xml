@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/activity_layout"
         android:layout_width="409dp"
         android:layout_height="889dp"
         android:orientation="vertical"
@@ -30,32 +31,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/database_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:autoSizeTextType="uniform"
-            android:text="@string/database_text"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="#F44336"
-            android:textSize="34sp"
-            android:textStyle="bold"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/database_legend"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
-            android:autoSizeTextType="uniform"
-            android:text="@string/database_legend_text"
-            android:textSize="16sp"
-            android:visibility="gone"/>
-
-        <TextView
             android:id="@+id/app_explain"
             android:layout_width="match_parent"
             android:layout_height="173dp"
@@ -65,6 +40,73 @@
             android:text="@string/app_explain"
             android:textAlignment="center"
             android:textSize="24sp" />
+
+        <TableLayout
+            android:id="@+id/database_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:visibility="gone">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/database_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autoSizeTextType="uniform"
+                    android:text="@string/database_text"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="#F44336"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/searchText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/searchstring" />
+
+                <EditText
+                    android:id="@+id/searchQuery"
+                    android:layout_width="323dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text|textAutoCorrect" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/database_legend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:autoSizeTextType="uniform"
+                    android:text="@string/database_legend_text"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+            </TableRow>
+
+        </TableLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"

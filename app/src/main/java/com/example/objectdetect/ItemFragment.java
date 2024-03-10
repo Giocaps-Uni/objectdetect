@@ -5,21 +5,21 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.example.objectdetect.placeholder.PlaceholderContent;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class ItemFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private LinearLayout linearLayout;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,6 +69,9 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+
+
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -93,19 +96,64 @@ public class ItemFragment extends Fragment {
                         @Override
                         public void onSubscribe(Disposable d) {
                         }
+
                         @Override
                         public void onSuccess(List<LabeledImage> labeledImages) {
                             Log.d("DAO", "Retrieved database elements");
                             recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
                         }
+
                         @Override
                         public void onError(Throwable e) {
                         }
                     });
 
+            EditText searchQueryText = requireActivity().findViewById(R.id.searchQuery);
+
+            searchQueryText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    String query = String.valueOf(searchQueryText.getText());
+                    Log.d("QUERY", query);
+                    imagesDao.getFilteredList(query)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<List<LabeledImage>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                }
+
+                                @Override
+                                public void onSuccess(List<LabeledImage> labeledImages) {
+                                    Log.d("DAO", labeledImages.toString());
+
+                                    recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                }
+                            });
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
         }
         return view;
     }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -113,17 +161,15 @@ public class ItemFragment extends Fragment {
         // Workaround to simulate fragment fullscreen -> set textview non visible, fragment jumps up
         requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
         requireActivity().findViewById(R.id.app_explain).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.database_title).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.database_legend).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(R.id.database_layout).setVisibility(View.VISIBLE);
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
         // Workaround to simulate fragment fullscreen -> set textview visible again
         requireActivity().findViewById(R.id.app_title).setVisibility(View.VISIBLE);
         requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.database_title).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.database_legend).setVisibility(View.GONE);
+        requireActivity().findViewById(R.id.database_layout).setVisibility(View.GONE);
     }
-
 }

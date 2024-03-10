@@ -26,4 +26,5 @@
     <string name="database_text">Database</string>
     <string name="database_legend_text">\t\t\t Image \t\t\t\t\t\t\t\t\t\t\t Labels
         \t\t\t\t\t\t\tConf</string>
+    <string name="searchstring">Search</string>
 </resources>

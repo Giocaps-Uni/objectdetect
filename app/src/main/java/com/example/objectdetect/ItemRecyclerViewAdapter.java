@@ -9,17 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.objectdetect.placeholder.PlaceholderContent.PlaceholderItem;
-import com.example.objectdetect.databinding.FragmentItemBinding;
 import com.google.mlkit.vision.label.ImageLabel;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<LabeledImage> mValues;

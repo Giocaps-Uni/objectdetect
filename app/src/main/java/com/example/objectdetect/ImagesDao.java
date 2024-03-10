@@ -19,5 +19,6 @@ public interface ImagesDao {
     @Query("SELECT * FROM LabeledImage")
     Single<List<LabeledImage>>  getAll();
 
-
+    @Query("SELECT * FROM LabeledImage WHERE labels LIKE '%' || :label || '%'")
+    Single<List<LabeledImage>> getFilteredList(String label);
 }
