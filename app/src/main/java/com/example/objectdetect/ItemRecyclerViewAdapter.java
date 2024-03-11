@@ -53,6 +53,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
         return mValues.get(position);
     }
 
+    public void removeItem(int position) {
+        mValues.remove(position);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final ImageView image;
         public final TextView labels;

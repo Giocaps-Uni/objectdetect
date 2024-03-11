@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -114,29 +114,44 @@ public class ItemFragment extends Fragment {
                     @SuppressLint("CheckResult")
                     @Override public void onItemClick(View view, int position) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setMessage(R.string.delete_item_string).setPositiveButton(R.string.yes_string,
-                                (dialog, which) -> {
+                        builder.setMessage(R.string.delete_item_string).setPositiveButton(
+                                R.string.yes_string, (dialog, which) -> {
                             ItemRecyclerViewAdapter adapter =
                                     (ItemRecyclerViewAdapter) recyclerView.getAdapter();
                                 assert adapter != null;
-                                Completable.fromAction(() ->
-                                        imagesDao.deleteImage(adapter.getItem(position))
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(() -> Toast.makeText(context, "Completed!",
-                                                    Toast.LENGTH_SHORT).show(),
-                                            throwable -> Toast.makeText(context, "Error!",
-                                                    Toast.LENGTH_SHORT).show()));
+                                imagesDao.deleteImage(adapter.getItem(position))
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new SingleObserver<Integer>() {
+                                            @Override
+                                            public void onSubscribe(Disposable d) {
+                                            }
+
+                                            @Override
+                                            public void onSuccess(@NonNull Integer integer) {
+                                                Log.d("DAO", "Deleted item");
+                                                Toast.makeText(view.getContext(),
+                                                        "Item deleted",
+                                                        Toast.LENGTH_SHORT).show();
+                                                adapter.removeItem(position);
+                                                adapter.notifyItemRemoved(position);
+                                                recyclerView.removeViewAt(position);
+                                                adapter.notifyItemRangeChanged(position,
+                                                        adapter.getItemCount() - position);
+                                            }
 
 
+                                            @Override
+                                            public void onError(Throwable e) {
+                                            }
+                                        });
                                 }).setNegativeButton(R.string.no_string, (dialog, which) -> {
                             dialog.cancel();
                         }).show();
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                        Toast.makeText(requireContext(), "Diobell vecchio", Toast.LENGTH_SHORT).show();
+
                     }
                 })
         );

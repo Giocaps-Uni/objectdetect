@@ -24,5 +24,5 @@ public interface ImagesDao {
     Single<List<LabeledImage>> getFilteredList(String label);
 
     @Delete
-    Completable deleteImage(LabeledImage labeledImage);
+    Single<Integer> deleteImage(LabeledImage labeledImage);
 }
