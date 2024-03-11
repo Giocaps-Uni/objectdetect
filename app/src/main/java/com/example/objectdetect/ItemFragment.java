@@ -33,9 +33,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  */
 public class ItemFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 
 
@@ -69,107 +67,82 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        Context context = view.getContext();
+        RecyclerView recyclerView = view.findViewById(R.id.list);
 
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
 
+        //todo add loading animation
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        ImagesDatabase imagesDB = mainActivity.imagesDB;
+        ImagesDao imagesDao = imagesDB.imagesDao();
+        imagesDao.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<LabeledImage>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
 
+                    @Override
+                    public void onSuccess(List<LabeledImage> labeledImages) {
+                        Log.d("DAO", "Retrieved database elements");
+                        recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
+                    }
 
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
+
+        EditText searchQueryText = view.findViewById(R.id.searchQuery);
+
+        searchQueryText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
             }
 
-            //todo add loading animation
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                String query = String.valueOf(searchQueryText.getText());
+                Log.d("QUERY", query);
+                imagesDao.getFilteredList(query)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SingleObserver<List<LabeledImage>>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                            }
 
-            MainActivity mainActivity = (MainActivity) requireActivity();
-            ImagesDatabase imagesDB = mainActivity.imagesDB;
-            ImagesDao imagesDao = imagesDB.imagesDao();
-            imagesDao.getAll()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleObserver<List<LabeledImage>>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                        }
+                            @Override
+                            public void onSuccess(List<LabeledImage> labeledImages) {
+                                Log.d("DAO", labeledImages.toString());
 
-                        @Override
-                        public void onSuccess(List<LabeledImage> labeledImages) {
-                            Log.d("DAO", "Retrieved database elements");
-                            recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
-                        }
+                                recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
 
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-                    });
+                            }
 
-            EditText searchQueryText = requireActivity().findViewById(R.id.searchQuery);
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+                        });
 
-            searchQueryText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                }
+            }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                    String query = String.valueOf(searchQueryText.getText());
-                    Log.d("QUERY", query);
-                    imagesDao.getFilteredList(query)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new SingleObserver<List<LabeledImage>>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-                                }
+            @Override
+            public void afterTextChanged(Editable editable) {
 
-                                @Override
-                                public void onSuccess(List<LabeledImage> labeledImages) {
-                                    Log.d("DAO", labeledImages.toString());
+            }
+        });
 
-                                    recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
-
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                }
-                            });
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
-
-        }
         return view;
     }
 
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // Workaround to simulate fragment fullscreen -> set textview non visible, fragment jumps up
-        requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.app_explain).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.database_layout).setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        // Workaround to simulate fragment fullscreen -> set textview visible again
-        requireActivity().findViewById(R.id.app_title).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.database_layout).setVisibility(View.GONE);
-    }
 }

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.mlkit.vision.label.ImageLabel;
 
 import java.util.List;
@@ -35,7 +37,8 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.image.setImageURI(mValues.get(position).uri);
+        Glide.with(holder.image.getContext()).asBitmap().load(mValues.get(position).uri)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
         holder.labels.setText(mValues.get(position).labels.stream().map(ImageLabel::getText)
                 .collect(Collectors.joining(",")));
         holder.confidence.setText(String.valueOf(mValues.get(position).confidence));

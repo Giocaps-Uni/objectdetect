@@ -25,7 +25,9 @@
     <string name="snackbar_insert">Correttamente inserito</string>
     <string name="action_text">Vai al DB</string>
     <string name="database_text">Database</string>
-    <string name="database_legend_text">\t\t\tImmagine \t\t\t\t\t\t\t\t\t\t\t Labels
-        \t\t\t\t\t\t\t Conf</string>
+    <string name="legend_image_string">Immagine</string>
+    <string name="legend_labels_string">Labels</string>
+    <string name="legend_conf_string">Conf</string>
     <string name="searchstring">Cerca</string>
+    <string name="label_hint">label/confidence</string>
 </resources>

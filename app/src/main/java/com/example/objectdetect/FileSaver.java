@@ -23,7 +23,7 @@ public class FileSaver implements Callable<Void> {
     public Void call(){
         try (FileOutputStream fileOutputStream = contextWrapper
                 .openFileOutput(filename, Context.MODE_PRIVATE)) {
-            result.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            result.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
             Log.d("SAVE_IMAGE", "File saved in " + contextWrapper.getFilesDir());
         } catch (Exception e) {
             Log.e("SAVE_IMAGE", e.getMessage(), e);

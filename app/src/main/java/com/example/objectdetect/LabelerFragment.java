@@ -37,12 +37,10 @@ import java.util.concurrent.Callable;
  */
 public class LabelerFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -60,7 +58,6 @@ public class LabelerFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment LabelerFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static LabelerFragment newInstance(String param1, String param2) {
         LabelerFragment fragment = new LabelerFragment();
         Bundle args = new Bundle();
@@ -148,7 +145,7 @@ public class LabelerFragment extends Fragment {
 
                     Bitmap image = uriToBitmap(uri);
                     // Load bitmap into cache
-                   //loadBitmap(uri, image);
+                   loadBitmap(uri, image);
 
                     try {
                         ExifInterface exif = new ExifInterface(
@@ -156,6 +153,7 @@ public class LabelerFragment extends Fragment {
                                         .openInputStream(uri))
                         );
                         //TODO insert loading animation
+                        //todo check image dimension
                         TaskRunner taskRunner = new TaskRunner();
                         taskRunner.executeAsync(new MatrixCalculator(exif), (matrix) -> {
 
@@ -224,21 +222,5 @@ public class LabelerFragment extends Fragment {
             Log.d("PHOTOPICKER", "PhotoPicker Opened");
         });
     }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        // Workaround to simulate fragment fullscreen -> set textview non visible, fragment jumps up
-        requireActivity().findViewById(R.id.app_title).setVisibility(View.GONE);
-        requireActivity().findViewById(R.id.app_explain).setVisibility(View.GONE);
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        // Workaround to simulate fragment fullscreen -> set textview visible again
-        requireActivity().findViewById(R.id.app_title).setVisibility(View.VISIBLE);
-        requireActivity().findViewById(R.id.app_explain).setVisibility(View.VISIBLE);
-    }
-
 
 }

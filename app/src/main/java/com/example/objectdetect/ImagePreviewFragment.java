@@ -48,12 +48,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ImagePreviewFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -77,7 +75,6 @@ public class ImagePreviewFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment ImagePreviewFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ImagePreviewFragment newInstance(String param1, String param2) {
         ImagePreviewFragment fragment = new ImagePreviewFragment();
         Bundle args = new Bundle();
@@ -99,14 +96,18 @@ public class ImagePreviewFragment extends Fragment {
             result = bundle.getParcelable("BitmapImage");
             assert result != null;
             //To use only for preview, post necessary to get width and height
-
-            imageView.post(() -> {
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result,
+                            (int) getResources().getDimension(R.dimen.thumbnail_dimen),
+                            (int) getResources().getDimension(R.dimen.thumbnail_dimen));
+                    Glide.with(this).asBitmap().load(thumbnail).
+                            diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+            /*imageView.post(() -> {
                 Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, imageView.getWidth(),
                         imageView.getHeight());
                 Glide.with(this).asBitmap().load(thumbnail).
                         diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
 
-            });
+            });*/
         });
     }
 
@@ -122,7 +123,7 @@ public class ImagePreviewFragment extends Fragment {
         chooseAnother = rootView.findViewById(R.id.button_choose_another);
         recView = rootView.findViewById(R.id.recyclerView);
         linearLayout = rootView.findViewById(R.id.linearLayout);
-        // Dynamical calculation of imageview size based on screen size
+        /* Dynamical calculation of imageview size based on screen size
         Display display = requireActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -134,7 +135,7 @@ public class ImagePreviewFragment extends Fragment {
         params.gravity = Gravity.CENTER_HORIZONTAL;
         params.topMargin = 50;
         imageView.setLayoutParams(params);
-
+        */
         return rootView;
     }
 
@@ -144,11 +145,10 @@ public class ImagePreviewFragment extends Fragment {
                 .navigate(R.id.action_imagePreviewFragment_to_labelerFragment);
     }
 
-    //todo check thread usages
     protected void saveToDBAndFileSystem(List<ImageLabel> labels, float confidence){
         ContextWrapper cw = new ContextWrapper(requireActivity().getApplicationContext());
         // Save image in app specific folder
-        String filename = String.format(Locale.ITALY, "%d.png", System.currentTimeMillis());
+        String filename = String.format(Locale.ITALY, "%d.jpg", System.currentTimeMillis());
 
 
         TaskRunner taskRunner = new TaskRunner();
@@ -172,11 +172,9 @@ public class ImagePreviewFragment extends Fragment {
                         Log.d("INSERT", "INSERT COMPLETED");
                         Snackbar.make(requireView().findViewById(R.id.gotodb_button_id),
                                 R.string.snackbar_insert, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.action_text, v -> {
-                                    Navigation.findNavController(requireActivity(),
-                                        R.id.fragmentContainerView).navigate(
-                                                R.id.action_imagePreviewFragment_to_itemFragment);
-                                }).show();
+                                .setAction(R.string.action_text, v -> Navigation.findNavController(requireActivity(),
+                                    R.id.fragmentContainerView).navigate(
+                                            R.id.action_imagePreviewFragment_to_itemFragment)).show();
                     }
                     @Override
                     public void onError(Throwable e) {
