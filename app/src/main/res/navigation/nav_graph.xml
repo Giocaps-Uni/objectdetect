@@ -12,10 +12,16 @@
         tools:layout="@layout/fragment_buttons" >
         <action
             android:id="@+id/action_buttonsFragment_to_labelerFragment2"
-            app:destination="@id/labelerFragment" />
+            app:destination="@id/labelerFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
         <action
             android:id="@+id/action_buttonsFragment_to_itemFragment"
-            app:destination="@id/itemFragment" />
+            app:destination="@id/itemFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/labelerFragment"
@@ -24,7 +30,10 @@
         tools:layout="@layout/fragment_labeler" >
         <action
             android:id="@+id/action_labelerFragment_to_imagePreviewFragment"
-            app:destination="@id/imagePreviewFragment" />
+            app:destination="@id/imagePreviewFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/imagePreviewFragment"
@@ -33,13 +42,22 @@
         tools:layout="@layout/fragment_image_preview" >
         <action
             android:id="@+id/action_imagePreviewFragment_to_labelerFragment"
-            app:destination="@id/labelerFragment" />
+            app:destination="@id/labelerFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
         <action
             android:id="@+id/action_imagePreviewFragment_to_itemFragment"
-            app:destination="@id/itemFragment" />
+            app:destination="@id/itemFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
         <action
             android:id="@+id/action_imagePreviewFragment_to_buttonsFragment"
-            app:destination="@id/buttonsFragment" />
+            app:destination="@id/buttonsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/itemFragment"
@@ -48,6 +66,9 @@
         tools:layout="@layout/fragment_item_list" >
         <action
             android:id="@+id/action_itemFragment_to_buttonsFragment"
-            app:destination="@id/buttonsFragment" />
+            app:destination="@id/buttonsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
 </navigation>

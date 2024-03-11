@@ -34,4 +34,5 @@
     <string name="yes_string">Sì</string>
     <string name="no_string">No</string>
     <string name="image_dimen_string">Immagine troppo grande! Selezionane un\' altra</string>
+    <string name="item_deleted_string">Oggetto Cancellato</string>
 </resources>

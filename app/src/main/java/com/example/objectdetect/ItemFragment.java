@@ -142,7 +142,7 @@ public class ItemFragment extends Fragment {
                                             public void onSuccess(@NonNull Integer integer) {
                                                 Log.d("DAO", "Deleted item");
                                                 Toast.makeText(view.getContext(),
-                                                        "Item deleted",
+                                                        R.string.item_deleted_string,
                                                         Toast.LENGTH_SHORT).show();
                                                 adapter.removeItem(position);
                                                 adapter.notifyItemRemoved(position);
