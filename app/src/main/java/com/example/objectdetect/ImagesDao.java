@@ -1,6 +1,7 @@
 package com.example.objectdetect;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -21,4 +22,7 @@ public interface ImagesDao {
 
     @Query("SELECT * FROM LabeledImage WHERE labels LIKE '%' || :label || '%'")
     Single<List<LabeledImage>> getFilteredList(String label);
+
+    @Delete
+    Completable deleteImage(LabeledImage labeledImage);
 }

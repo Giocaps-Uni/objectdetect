@@ -1,9 +1,12 @@
 package com.example.objectdetect;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,11 +23,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -35,6 +41,8 @@ public class ItemFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
+
+
 
 
     /**
@@ -100,6 +108,40 @@ public class ItemFragment extends Fragment {
                     }
                 });
 
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, recyclerView ,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+                    @SuppressLint("CheckResult")
+                    @Override public void onItemClick(View view, int position) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                        builder.setMessage(R.string.delete_item_string).setPositiveButton(R.string.yes_string,
+                                (dialog, which) -> {
+                            ItemRecyclerViewAdapter adapter =
+                                    (ItemRecyclerViewAdapter) recyclerView.getAdapter();
+                                assert adapter != null;
+                                Completable.fromAction(() ->
+                                        imagesDao.deleteImage(adapter.getItem(position))
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(() -> Toast.makeText(context, "Completed!",
+                                                    Toast.LENGTH_SHORT).show(),
+                                            throwable -> Toast.makeText(context, "Error!",
+                                                    Toast.LENGTH_SHORT).show()));
+
+
+                                }).setNegativeButton(R.string.no_string, (dialog, which) -> {
+                            dialog.cancel();
+                        }).show();
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                        Toast.makeText(requireContext(), "Diobell vecchio", Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
+
+
         EditText searchQueryText = view.findViewById(R.id.searchQuery);
 
         searchQueryText.addTextChangedListener(new TextWatcher() {
@@ -144,5 +186,6 @@ public class ItemFragment extends Fragment {
 
         return view;
     }
+
 
 }

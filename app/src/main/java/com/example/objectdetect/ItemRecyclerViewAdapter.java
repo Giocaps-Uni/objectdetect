@@ -49,6 +49,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
         return mValues.size();
     }
 
+    public LabeledImage getItem(int position) {
+        return mValues.get(position);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final ImageView image;
         public final TextView labels;

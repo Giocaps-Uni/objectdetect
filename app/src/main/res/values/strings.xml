@@ -29,4 +29,7 @@
     <string name="legend_conf_string">Conf</string>
     <string name="searchstring">Search</string>
     <string name="label_hint">label/confidence</string>
+    <string name="delete_item_string">Delete item?</string>
+    <string name="yes_string">Yes</string>
+    <string name="no_string">No</string>
 </resources>

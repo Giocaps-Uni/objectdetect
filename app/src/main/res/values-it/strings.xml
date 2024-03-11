@@ -30,4 +30,7 @@
     <string name="legend_conf_string">Conf</string>
     <string name="searchstring">Cerca</string>
     <string name="label_hint">label/confidence</string>
+    <string name="delete_item_string">Cancellare questo elemento?</string>
+    <string name="yes_string">Sì</string>
+    <string name="no_string">No</string>
 </resources>
