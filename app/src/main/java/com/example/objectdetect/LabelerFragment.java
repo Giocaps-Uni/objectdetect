@@ -23,8 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -143,30 +146,46 @@ public class LabelerFragment extends Fragment {
                 if (uri != null) {
                     Log.d("PHOTOPICKER", "Selected URI: " + uri);
 
-                    Bitmap image = uriToBitmap(uri);
-                    // Load bitmap into cache
-                   loadBitmap(uri, image);
-
                     try {
-                        ExifInterface exif = new ExifInterface(
-                                Objects.requireNonNull(this.requireContext().getContentResolver()
-                                        .openInputStream(uri))
-                        );
-                        //TODO insert loading animation
-                        //todo check image dimension
-                        TaskRunner taskRunner = new TaskRunner();
-                        taskRunner.executeAsync(new MatrixCalculator(exif), (matrix) -> {
+                        ParcelFileDescriptor parcelFileDescriptor = requireActivity()
+                                .getContentResolver().openFileDescriptor(uri, "r");
+                        assert parcelFileDescriptor != null;
+                        long filesize = parcelFileDescriptor.getStatSize();
+                        Log.i("file size", String.valueOf(parcelFileDescriptor.getStatSize()));
+                        if (filesize > 5000000) {
+                            Toast.makeText(requireContext(), R.string.image_dimen_string,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Bitmap image = uriToBitmap(uri);
+                            // Load bitmap into cache
+                            loadBitmap(uri, image);
 
-                            assert image != null;
-                            Bitmap adjustedBitmap = Bitmap.createBitmap(image, 0, 0,
-                                    image.getWidth(), image.getHeight(), matrix, true);
+                            try {
+                                ExifInterface exif = new ExifInterface(
+                                        Objects.requireNonNull(this.requireContext().getContentResolver()
+                                                .openInputStream(uri))
+                                );
+                                //TODO insert loading animation
+                                TaskRunner taskRunner = new TaskRunner();
+                                taskRunner.executeAsync(new MatrixCalculator(exif), (matrix) -> {
 
-                            passImageToFragment(adjustedBitmap);
-                        });
+                                    assert image != null;
+                                    Bitmap adjustedBitmap = Bitmap.createBitmap(image, 0, 0,
+                                            image.getWidth(), image.getHeight(), matrix, true);
 
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                                    passImageToFragment(adjustedBitmap);
+                                });
+
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    } catch (Exception e) {
+                        //escape logic here
                     }
+
 
 
 

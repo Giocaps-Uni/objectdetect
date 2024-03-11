@@ -1,9 +1,7 @@
 package com.example.objectdetect;
 
-import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +35,6 @@ import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,7 +56,7 @@ public class ImagePreviewFragment extends Fragment {
     private TextView chooseConf;
     private Bitmap result;
     private Slider confSlider;
-    private Button launchButton, chooseAnother, goToDBButton;
+    private Button launchButton, chooseAnother;
     private RecyclerView recView;
     private LinearLayout linearLayout;
 

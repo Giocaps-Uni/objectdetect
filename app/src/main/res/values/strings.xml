@@ -32,4 +32,5 @@
     <string name="delete_item_string">Delete item?</string>
     <string name="yes_string">Yes</string>
     <string name="no_string">No</string>
+    <string name="image_dimen_string">Image too big! Select a smaller image</string>
 </resources>
