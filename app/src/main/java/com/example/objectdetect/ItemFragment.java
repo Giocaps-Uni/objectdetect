@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,6 +70,15 @@ public class ItemFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                        .navigate(R.id.action_itemFragment_to_buttonsFragment);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override
@@ -135,7 +146,7 @@ public class ItemFragment extends Fragment {
                                                         Toast.LENGTH_SHORT).show();
                                                 adapter.removeItem(position);
                                                 adapter.notifyItemRemoved(position);
-                                                recyclerView.removeViewAt(position);
+                                                //recyclerView.removeViewAt(position);
                                                 adapter.notifyItemRangeChanged(position,
                                                         adapter.getItemCount() - position);
                                             }

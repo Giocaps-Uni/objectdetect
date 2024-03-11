@@ -37,10 +37,17 @@
         <action
             android:id="@+id/action_imagePreviewFragment_to_itemFragment"
             app:destination="@id/itemFragment" />
+        <action
+            android:id="@+id/action_imagePreviewFragment_to_buttonsFragment"
+            app:destination="@id/buttonsFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemFragment"
         android:name="com.example.objectdetect.ItemFragment"
         android:label="fragment_item_list"
-        tools:layout="@layout/fragment_item_list" />
+        tools:layout="@layout/fragment_item_list" >
+        <action
+            android:id="@+id/action_itemFragment_to_buttonsFragment"
+            app:destination="@id/buttonsFragment" />
+    </fragment>
 </navigation>

@@ -8,6 +8,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
@@ -91,16 +92,23 @@ public class ImagePreviewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                        .navigate(R.id.action_imagePreviewFragment_to_buttonsFragment);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
         getParentFragmentManager().setFragmentResultListener("requestKey",
                 this, (requestKey, bundle) -> {
             result = bundle.getParcelable("BitmapImage");
             assert result != null;
             //To use only for preview, post necessary to get width and height
-                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result,
-                            (int) getResources().getDimension(R.dimen.thumbnail_dimen),
-                            (int) getResources().getDimension(R.dimen.thumbnail_dimen));
-                    Glide.with(this).asBitmap().load(thumbnail).
-                            diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, (int) getResources().getDimension(R.dimen.thumbnail_dimen), (int) getResources().getDimension(R.dimen.thumbnail_dimen));
+            Glide.with(this).asBitmap().load(thumbnail).
+                    diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
             /*imageView.post(() -> {
                 Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, imageView.getWidth(),
                         imageView.getHeight());
