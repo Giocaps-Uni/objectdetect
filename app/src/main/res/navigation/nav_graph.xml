@@ -70,5 +70,16 @@
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in" />
+        <action
+            android:id="@+id/action_itemFragment_to_zoomFragment"
+            app:destination="@id/zoomFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"/>
     </fragment>
+    <fragment
+        android:id="@+id/zoomFragment"
+        android:name="com.example.objectdetect.ZoomFragment"
+        android:label="fragment_zoom"
+        tools:layout="@layout/fragment_zoom" />
 </navigation>

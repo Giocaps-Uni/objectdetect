@@ -47,7 +47,7 @@ public class LabelerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private LruCache<String, Bitmap> memoryCache;
+
 
     public LabelerFragment() {
         // Required empty public constructor
@@ -92,40 +92,7 @@ public class LabelerFragment extends Fragment {
                 .navigate(R.id.action_labelerFragment_to_imagePreviewFragment);
     }
 
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            memoryCache.put(key, bitmap);
-        }
-    }
 
-    public Bitmap getBitmapFromMemCache(String key) {
-        return memoryCache.get(key);
-    }
-
-    class BitmapLoaderTask implements Callable<Void> {
-
-        private final String urikey;
-        private final Bitmap bitmap;
-
-        public BitmapLoaderTask(String input, Bitmap bitmapInput) {
-            this.urikey = input;
-            this.bitmap = bitmapInput;
-        }
-
-        @Override
-        public Void call(){
-            addBitmapToMemoryCache(urikey, bitmap);
-            return null;
-        }
-    }
-
-    public void loadBitmap(Uri uri, Bitmap image) {
-        final String imageKey = uri.toString();
-        TaskRunner taskRunner = new TaskRunner();
-        taskRunner.executeAsync(new BitmapLoaderTask(imageKey, image), (Null) -> {
-            Log.d("CACHING", String.valueOf(memoryCache.size()));
-        });
-    }
 
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
@@ -159,7 +126,7 @@ public class LabelerFragment extends Fragment {
                         else {
                             Bitmap image = uriToBitmap(uri);
                             // Load bitmap into cache
-                            loadBitmap(uri, image);
+                            //loadBitmap(uri, image);
 
                             try {
                                 ExifInterface exif = new ExifInterface(
@@ -201,19 +168,8 @@ public class LabelerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
 
-        memoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
 
 
     }

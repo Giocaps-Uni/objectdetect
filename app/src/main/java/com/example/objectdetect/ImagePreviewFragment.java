@@ -115,6 +115,7 @@ public class ImagePreviewFragment extends Fragment {
         });
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,6 +163,9 @@ public class ImagePreviewFragment extends Fragment {
 
         Uri uri = Uri.fromFile(new File(cw.getFilesDir(), filename));
         MainActivity mainActivity = (MainActivity) requireActivity();
+
+        mainActivity.loadBitmap(uri, result);
+
         ImagesDatabase imagesDB = mainActivity.imagesDB;
         ImagesDao imagesDao = imagesDB.imagesDao();
         imagesDao.insertImage(new LabeledImage(uri, labels, confidence))
@@ -216,10 +220,14 @@ public class ImagePreviewFragment extends Fragment {
         imageView.getLayoutParams().height = 400;
         imageView.getLayoutParams().width = 400;
         TextView labelsTitle = new TextView(requireContext());
-        labelsTitle.setText(R.string.labels_title);
+        if (labels.isEmpty())
+            labelsTitle.setText(R.string.no_labels_found);
+        else
+            labelsTitle.setText(R.string.labels_title);
         labelsTitle.setTextSize(24f);
         labelsTitle.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(labelsTitle, 3);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         recView.setLayoutManager(layoutManager);
@@ -244,6 +252,7 @@ public class ImagePreviewFragment extends Fragment {
         labeler.process(image)
                 .addOnSuccessListener(labels -> {
                     // Task completed successfully
+
                     for (ImageLabel label : labels) {
                         String text = label.getText();
                         Log.d("TEXT", text);

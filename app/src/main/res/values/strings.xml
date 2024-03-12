@@ -34,4 +34,5 @@
     <string name="no_string">No</string>
     <string name="image_dimen_string">Image too big! Select a smaller image</string>
     <string name="item_deleted_string">Item deleted</string>
+    <string name="no_labels_found">No labels found</string>
 </resources>

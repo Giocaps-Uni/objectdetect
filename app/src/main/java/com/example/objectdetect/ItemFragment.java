@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,13 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +48,7 @@ public class ItemFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
 
-
+    private ImageView imageView;
 
 
     /**
@@ -66,10 +70,10 @@ public class ItemFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
@@ -88,6 +92,7 @@ public class ItemFragment extends Fragment {
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
+
 
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -111,7 +116,7 @@ public class ItemFragment extends Fragment {
                     @Override
                     public void onSuccess(List<LabeledImage> labeledImages) {
                         Log.d("DAO", "Retrieved database elements");
-                        recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
+                        recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages, requireActivity()));
                     }
 
                     @Override
@@ -120,51 +125,63 @@ public class ItemFragment extends Fragment {
                 });
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, recyclerView ,
+                new RecyclerItemClickListener(context, recyclerView,
                         new RecyclerItemClickListener.OnItemClickListener() {
-                    @SuppressLint("CheckResult")
-                    @Override public void onItemClick(View view, int position) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                        builder.setMessage(R.string.delete_item_string).setPositiveButton(
-                                R.string.yes_string, (dialog, which) -> {
-                            ItemRecyclerViewAdapter adapter =
-                                    (ItemRecyclerViewAdapter) recyclerView.getAdapter();
+                            @SuppressLint("CheckResult")
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                RecyclerView.ViewHolder viewHolder = recyclerView
+                                        .findViewHolderForAdapterPosition(position);
+                                Bundle uriBundle = new Bundle();
+                                ItemRecyclerViewAdapter adapter =
+                                        (ItemRecyclerViewAdapter) recyclerView.getAdapter();
                                 assert adapter != null;
-                                imagesDao.deleteImage(adapter.getItem(position))
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(new SingleObserver<Integer>() {
-                                            @Override
-                                            public void onSubscribe(Disposable d) {
-                                            }
 
-                                            @Override
-                                            public void onSuccess(@NonNull Integer integer) {
-                                                Log.d("DAO", "Deleted item");
-                                                Toast.makeText(view.getContext(),
-                                                        R.string.item_deleted_string,
-                                                        Toast.LENGTH_SHORT).show();
-                                                adapter.removeItem(position);
-                                                adapter.notifyItemRemoved(position);
-                                                //recyclerView.removeViewAt(position);
-                                                adapter.notifyItemRangeChanged(position,
-                                                        adapter.getItemCount() - position);
-                                            }
+                                uriBundle.putString("URI", adapter.getItem(position).uri.toString());
+                                getParentFragmentManager().setFragmentResult("urikey", uriBundle);
+                                Navigation
+                                .findNavController(requireActivity(), R.id.fragmentContainerView)
+                                        .navigate(R.id.action_itemFragment_to_zoomFragment);
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                builder.setMessage(R.string.delete_item_string).setPositiveButton(
+                                        R.string.yes_string, (dialog, which) -> {
+                                            ItemRecyclerViewAdapter adapter =
+                                                    (ItemRecyclerViewAdapter) recyclerView.getAdapter();
+                                            assert adapter != null;
+                                            imagesDao.deleteImage(adapter.getItem(position))
+                                                    .subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(new SingleObserver<Integer>() {
+                                                        @Override
+                                                        public void onSubscribe(Disposable d) {
+                                                        }
+
+                                                        @Override
+                                                        public void onSuccess(@NonNull Integer integer) {
+                                                            Log.d("DAO", "Deleted item");
+                                                            Toast.makeText(view.getContext(),
+                                                                    R.string.item_deleted_string,
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            adapter.removeItem(position);
+                                                            adapter.notifyItemRemoved(position);
+                                                            adapter.notifyItemRangeChanged(position,
+                                                                    adapter.getItemCount() - position);
+                                                        }
 
 
-                                            @Override
-                                            public void onError(Throwable e) {
-                                            }
-                                        });
-                                }).setNegativeButton(R.string.no_string, (dialog, which) -> {
-                            dialog.cancel();
-                        }).show();
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-
-                    }
-                })
+                                                        @Override
+                                                        public void onError(Throwable e) {
+                                                        }
+                                                    });
+                                        }).setNegativeButton(R.string.no_string, (dialog, which) -> {
+                                    dialog.cancel();
+                                }).show();
+                            }
+                        })
         );
 
 
@@ -193,7 +210,7 @@ public class ItemFragment extends Fragment {
                             public void onSuccess(List<LabeledImage> labeledImages) {
                                 Log.d("DAO", labeledImages.toString());
 
-                                recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages));
+                                recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages, requireActivity()));
 
                             }
 
@@ -212,6 +229,4 @@ public class ItemFragment extends Fragment {
 
         return view;
     }
-
-
 }

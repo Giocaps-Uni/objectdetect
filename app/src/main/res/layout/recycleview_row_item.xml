@@ -16,8 +16,9 @@
 
         <ImageView
             android:id="@+id/dbImage"
-            android:layout_width="218dp"
+            android:layout_width="130dp"
             android:layout_height="200dp"
+            android:maxWidth="100dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_launcher_background" />
 
@@ -40,7 +41,7 @@
             android:layout_marginTop="50dp"
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
-            android:gravity="fill"
+            android:gravity="start|fill"
             android:text="TextView" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
