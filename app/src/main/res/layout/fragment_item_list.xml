@@ -10,10 +10,10 @@
         android:id="@+id/database_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:visibility="visible"
+        android:layout_marginTop="20dp"
+        android:shrinkColumns="*"
         android:stretchColumns="*"
-        android:shrinkColumns="*">
+        android:visibility="visible">
 
         <TableRow
             android:layout_width="match_parent"
@@ -29,9 +29,22 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#F44336"
-                android:textSize="34sp"
+                android:textSize="48sp"
                 android:textStyle="bold"
                 android:visibility="visible" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/explainDBTextview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/db_explain" />
         </TableRow>
 
         <TableRow
@@ -45,7 +58,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="2"
-                android:text="@string/searchstring" />
+                android:text="@string/searchstring"
+                android:textAlignment="center"
+                android:textColor="#F50505"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/searchQuery"
@@ -63,6 +79,7 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:weightSum="10">
 

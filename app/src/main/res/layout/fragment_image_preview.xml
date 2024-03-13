@@ -47,6 +47,13 @@
             android:textStyle="bold"
             tools:text="@string/confidence_text" />
 
+        <TextView
+            android:id="@+id/confExplainTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confidence_explain"
+            android:textAlignment="center" />
+
         <com.google.android.material.slider.Slider
             android:id="@+id/confidenceSlider"
             android:layout_width="300dp"

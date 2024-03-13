@@ -65,7 +65,7 @@ public class ImagePreviewFragment extends Fragment {
     private String mParam2;
 
     private ImageView imageView;
-    private TextView chooseConf;
+    private TextView chooseConf, confExplain;
     private Bitmap result;
     private Slider confSlider;
     private Button launchButton, chooseAnother;
@@ -131,6 +131,7 @@ public class ImagePreviewFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_image_preview, container, false);
         imageView = rootView.findViewById(R.id.imagePreview);
         chooseConf = rootView.findViewById(R.id.confidenceTextView);
+        confExplain = rootView.findViewById(R.id.confExplainTextView);
         confSlider = rootView.findViewById(R.id.confidenceSlider);
         launchButton = rootView.findViewById(R.id.button_launch_labeler);
         chooseAnother = rootView.findViewById(R.id.button_choose_another);
@@ -217,8 +218,10 @@ public class ImagePreviewFragment extends Fragment {
     protected void showResults(List<ImageLabel> labels, float confidence) {
         launchButton.setVisibility(View.GONE);
         chooseConf.setVisibility(View.GONE);
+        confExplain.setVisibility(View.GONE);
         confSlider.setVisibility(View.GONE);
         chooseAnother.setVisibility(View.GONE);
+
         imageView.getLayoutParams().height = 400;
         imageView.getLayoutParams().width = 400;
         TextView labelsTitle = new TextView(requireContext());

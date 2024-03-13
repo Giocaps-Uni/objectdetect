@@ -10,7 +10,7 @@
     <string name="close_button_string">Chiudi app</string>
     <string name="fragment_labeler_title">Labeler di oggetti</string>
     <string name="fragment_labeler">
-        Questo è il labeler di oggetti.  Scatta una foto
+        Scatta una foto
         con la fotocamera o caricane una dalla galleria e questa sarà
         etichettata.
     </string>
@@ -24,7 +24,7 @@
     <string name="save_to_db">Salva nel DB</string>
     <string name="snackbar_insert">Correttamente inserito</string>
     <string name="action_text">Vai al DB</string>
-    <string name="database_text">Database</string>
+    <string name="database_text">Database </string>
     <string name="legend_image_string">Immagine</string>
     <string name="legend_labels_string">Labels</string>
     <string name="legend_conf_string">Conf</string>
@@ -36,4 +36,6 @@
     <string name="image_dimen_string">Immagine troppo grande! Selezionane un\' altra</string>
     <string name="item_deleted_string">Oggetto Cancellato</string>
     <string name="no_labels_found">Nessuna etichetta trovata</string>
+    <string name="db_explain">Tocca un elemento per zoomare, tieni premuto per cancellare</string>
+    <string name="confidence_explain">Imposta una soglia massima alla precisione del labeler</string>
 </resources>

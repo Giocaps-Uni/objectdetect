@@ -22,7 +22,7 @@
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="#F44336"
-            android:textSize="34sp"
+            android:textSize="60sp"
             android:textStyle="bold" />
 
         <TextView

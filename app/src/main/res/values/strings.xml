@@ -10,7 +10,7 @@
     <string name="close_button_string">Close App</string>
     <string name="fragment_labeler_title">Object Labeler</string>
     <string name="fragment_labeler">
-        This is the object labeler. Take a picture using your
+        Take a picture using your
         camera or load one from the gallery and it will be labeled.
     </string>
     <string name="labeler_camera_button_string">Take a picture &#128248;</string>
@@ -35,4 +35,6 @@
     <string name="image_dimen_string">Image too big! Select a smaller image</string>
     <string name="item_deleted_string">Item deleted</string>
     <string name="no_labels_found">No labels found</string>
+    <string name="db_explain">Touch an item to zoom, hold to delete</string>
+    <string name="confidence_explain">Set a maximum threshold to the labeler precision</string>
 </resources>
