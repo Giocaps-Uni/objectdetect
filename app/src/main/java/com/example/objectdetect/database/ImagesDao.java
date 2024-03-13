@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,9 +8,11 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
+/**
+ * Dao for the Room database. Uses JavaRx Single<T> to run the queries off the main thread
+ */
 @Dao
 public interface ImagesDao {
 

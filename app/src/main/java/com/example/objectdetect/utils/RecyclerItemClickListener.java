@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.utils;
 
 import android.content.Context;
 
@@ -8,7 +8,11 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.objectdetect.fragments.ItemFragment;
 
+/**
+ * Implements the touch event listener to be used in {@link ItemFragment} recyclerview
+ */
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
     private final OnItemClickListener mListener;
 
@@ -31,6 +35,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
             @Override
             public void onLongPress(@NonNull MotionEvent e) {
+                // Gets the selected item based on the event position on the screen
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && mListener != null) {
                     mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));

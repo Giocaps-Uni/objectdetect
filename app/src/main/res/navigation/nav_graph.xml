@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/buttonsFragment"
-        android:name="com.example.objectdetect.ButtonsFragment"
+        android:name="com.example.objectdetect.fragments.ButtonsFragment"
         android:label="fragment_buttons"
         tools:layout="@layout/fragment_buttons" >
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/labelerFragment"
-        android:name="com.example.objectdetect.LabelerFragment"
+        android:name="com.example.objectdetect.fragments.LabelerFragment"
         android:label="fragment_labeler"
         tools:layout="@layout/fragment_labeler" >
         <action
@@ -34,10 +34,16 @@
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in" />
+        <action
+            android:id="@+id/action_labelerFragment_to_buttonsFragment"
+            app:destination="@id/buttonsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in" />
     </fragment>
     <fragment
         android:id="@+id/imagePreviewFragment"
-        android:name="com.example.objectdetect.ImagePreviewFragment"
+        android:name="com.example.objectdetect.fragments.ImagePreviewFragment"
         android:label="fragment_image_preview"
         tools:layout="@layout/fragment_image_preview" >
         <action
@@ -61,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/itemFragment"
-        android:name="com.example.objectdetect.ItemFragment"
+        android:name="com.example.objectdetect.fragments.ItemFragment"
         android:label="fragment_item_list"
         tools:layout="@layout/fragment_item_list" >
         <action
@@ -79,7 +85,7 @@
     </fragment>
     <fragment
         android:id="@+id/zoomFragment"
-        android:name="com.example.objectdetect.ZoomFragment"
+        android:name="com.example.objectdetect.fragments.ZoomFragment"
         android:label="fragment_zoom"
         tools:layout="@layout/fragment_zoom" />
 </navigation>

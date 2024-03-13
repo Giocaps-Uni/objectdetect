@@ -1,13 +1,11 @@
-package com.example.objectdetect;
+package com.example.objectdetect.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,32 +14,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.objectdetect.database.ImagesDao;
+import com.example.objectdetect.database.ImagesDatabase;
+import com.example.objectdetect.adapters.ItemRecyclerViewAdapter;
+import com.example.objectdetect.database.LabeledImage;
+import com.example.objectdetect.MainActivity;
+import com.example.objectdetect.R;
+import com.example.objectdetect.utils.RecyclerItemClickListener;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.SingleObserver;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of Items. Shows the elements saved in the Room database and gives
+ * the possibility to zoom an image or delete an item
  */
 public class ItemFragment extends Fragment {
 
@@ -93,18 +92,18 @@ public class ItemFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
 
-
+        //Auto generated code, not used
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
-        //todo add loading animation
 
         MainActivity mainActivity = (MainActivity) requireActivity();
         ImagesDatabase imagesDB = mainActivity.imagesDB;
         ImagesDao imagesDao = imagesDB.imagesDao();
+        // a simple select * query
         imagesDao.getAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -116,9 +115,10 @@ public class ItemFragment extends Fragment {
                     @Override
                     public void onSuccess(List<LabeledImage> labeledImages) {
                         Log.d("DAO", "Retrieved database elements");
-                        recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages, requireActivity()));
+                        // Get the data in the recyclerview to show it
+                        recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages,
+                                requireActivity()));
                     }
-
                     @Override
                     public void onError(Throwable e) {
                     }
@@ -130,8 +130,7 @@ public class ItemFragment extends Fragment {
                             @SuppressLint("CheckResult")
                             @Override
                             public void onItemClick(View view, int position) {
-                                RecyclerView.ViewHolder viewHolder = recyclerView
-                                        .findViewHolderForAdapterPosition(position);
+                                // Single touch, zoom the image
                                 Bundle uriBundle = new Bundle();
                                 ItemRecyclerViewAdapter adapter =
                                         (ItemRecyclerViewAdapter) recyclerView.getAdapter();
@@ -146,6 +145,7 @@ public class ItemFragment extends Fragment {
 
                             @Override
                             public void onLongItemClick(View view, int position) {
+                                // Asks to delete the database entry when a long press is caught
                                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                                 builder.setMessage(R.string.delete_item_string).setPositiveButton(
                                         R.string.yes_string, (dialog, which) -> {
@@ -166,13 +166,12 @@ public class ItemFragment extends Fragment {
                                                             Toast.makeText(view.getContext(),
                                                                     R.string.item_deleted_string,
                                                                     Toast.LENGTH_SHORT).show();
+                                                            // Update recyclerview on the fly
                                                             adapter.removeItem(position);
                                                             adapter.notifyItemRemoved(position);
                                                             adapter.notifyItemRangeChanged(position,
                                                                     adapter.getItemCount() - position);
                                                         }
-
-
                                                         @Override
                                                         public void onError(Throwable e) {
                                                         }
@@ -184,9 +183,8 @@ public class ItemFragment extends Fragment {
                         })
         );
 
-
+        // Implements a search in the database using labels or confidence
         EditText searchQueryText = view.findViewById(R.id.searchQuery);
-
         searchQueryText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start,
@@ -209,8 +207,8 @@ public class ItemFragment extends Fragment {
                             @Override
                             public void onSuccess(List<LabeledImage> labeledImages) {
                                 Log.d("DAO", labeledImages.toString());
-
-                                recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages, requireActivity()));
+                                recyclerView.setAdapter(new ItemRecyclerViewAdapter(labeledImages,
+                                        requireActivity()));
 
                             }
 
@@ -220,7 +218,6 @@ public class ItemFragment extends Fragment {
                         });
 
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
 

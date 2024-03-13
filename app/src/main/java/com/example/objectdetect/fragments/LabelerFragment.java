@@ -1,9 +1,10 @@
-package com.example.objectdetect;
+package com.example.objectdetect.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,26 +18,27 @@ import androidx.navigation.Navigation;
 
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.File;
+import com.example.objectdetect.R;
+import com.example.objectdetect.threads.MatrixCalculator;
+import com.example.objectdetect.utils.TaskRunner;
+
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LabelerFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * Fragment used to choose between taking a photo or loading it from the gallery
+ * Passes the retrieved image to {@link ImagePreviewFragment}
  */
 public class LabelerFragment extends Fragment {
 
@@ -71,6 +73,7 @@ public class LabelerFragment extends Fragment {
     }
 
     private Bitmap uriToBitmap(Uri selectedFileUri) {
+        // Creates a bitmap of the selected image to be used in database and recyclerview
         try {
             ParcelFileDescriptor parcelFileDescriptor =
                     requireActivity().getContentResolver().openFileDescriptor(selectedFileUri, "r");
@@ -85,6 +88,7 @@ public class LabelerFragment extends Fragment {
         }
     }
     protected void passImageToFragment(Bitmap image) {
+        // Navigates to ImagePreviewFragment passing the image bitmap
         Bundle result = new Bundle();
         result.putParcelable("BitmapImage", image);
         getParentFragmentManager().setFragmentResult("requestKey", result);
@@ -93,7 +97,7 @@ public class LabelerFragment extends Fragment {
     }
 
 
-
+    // Open Camera intent
     ActivityResultLauncher<Intent> mCameraImage = registerForActivityResult(new
                     ActivityResultContracts.StartActivityForResult(), result -> {
         Log.d("CAMERA", "Camera closed");
@@ -106,13 +110,15 @@ public class LabelerFragment extends Fragment {
         }
     });
 
+    // Open gallery intent
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 // Callback is invoked after the user selects a media item or closes the
                 // photo picker.
                 if (uri != null) {
                     Log.d("PHOTOPICKER", "Selected URI: " + uri);
-
+                    // If image is too big (example 50MP images) Canvas cannot draw it and will throw
+                    // an exception. Ml kit doesn't need too high resolutions, so limit image file size
                     try {
                         ParcelFileDescriptor parcelFileDescriptor = requireActivity()
                                 .getContentResolver().openFileDescriptor(uri, "r");
@@ -125,15 +131,12 @@ public class LabelerFragment extends Fragment {
                         }
                         else {
                             Bitmap image = uriToBitmap(uri);
-                            // Load bitmap into cache
-                            //loadBitmap(uri, image);
-
+                            // Rotate image for correct thumbnail visalization
                             try {
                                 ExifInterface exif = new ExifInterface(
                                         Objects.requireNonNull(this.requireContext().getContentResolver()
                                                 .openInputStream(uri))
                                 );
-                                //TODO insert loading animation
                                 TaskRunner taskRunner = new TaskRunner();
                                 taskRunner.executeAsync(new MatrixCalculator(exif), (matrix) -> {
 
@@ -150,11 +153,8 @@ public class LabelerFragment extends Fragment {
 
                         }
                     } catch (Exception e) {
-                        //escape logic here
+                        e.printStackTrace();
                     }
-
-
-
 
                 } else {
                     Log.d("PHOTOPICKER", "No media selected");
@@ -168,10 +168,14 @@ public class LabelerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
-
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+                        .navigate(R.id.action_labelerFragment_to_buttonsFragment);
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Override

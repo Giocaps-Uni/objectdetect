@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.utils;
 
 import android.net.Uri;
 
@@ -11,19 +11,11 @@ import com.google.mlkit.vision.label.ImageLabel;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * Type converters used by the image database. Converts uri to String and List to Gson
+ */
 public class Converters {
-    /*
-    @TypeConverter
-    public static byte[] bitmapToByteArray(Bitmap bitmap){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream);
-        return stream.toByteArray();
-    }
-    @TypeConverter
-    public static Bitmap byteArrayToBitmap(byte[] byteArray) {
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-    }
-    */
+
     @TypeConverter
     public static String uriToString(Uri uri) {
         return uri.toString();

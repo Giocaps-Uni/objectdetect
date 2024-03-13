@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.utils;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -6,6 +6,10 @@ import android.os.Looper;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+/**
+ * Provides an executor to offload work to a thread, uses handler to retrieve results from threads
+ */
 
 public class TaskRunner {
     private final Executor executor = Executors.newSingleThreadExecutor();
@@ -23,9 +27,7 @@ public class TaskRunner {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            handler.post(() -> {
-                callback.onComplete(result);
-            });
+            handler.post(() -> callback.onComplete(result));
         });
     }
 }

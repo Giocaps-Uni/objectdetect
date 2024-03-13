@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.fragments;
 
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -26,6 +26,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.objectdetect.adapters.CustomAdapter;
+import com.example.objectdetect.database.ImagesDao;
+import com.example.objectdetect.database.ImagesDatabase;
+import com.example.objectdetect.database.LabeledImage;
+import com.example.objectdetect.MainActivity;
+import com.example.objectdetect.R;
+import com.example.objectdetect.threads.FileSaver;
+import com.example.objectdetect.utils.TaskRunner;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
@@ -43,6 +51,10 @@ import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
+/**
+ *  Fragment with the effective labeler. Shows a preview of the image and the labels found and offers
+ *  the possibility to save the image in the database
+ */
 public class ImagePreviewFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,21 +109,17 @@ public class ImagePreviewFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
+
+        //Retrieve image passed by LabelerFragment
         getParentFragmentManager().setFragmentResultListener("requestKey",
                 this, (requestKey, bundle) -> {
             result = bundle.getParcelable("BitmapImage");
             assert result != null;
-            //To use only for preview, post necessary to get width and height
+            //To use only for preview, labeler is launched on full resolution image
             Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, (int) getResources().getDimension(R.dimen.thumbnail_dimen), (int) getResources().getDimension(R.dimen.thumbnail_dimen));
             Glide.with(this).asBitmap().load(thumbnail).
                     diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
-            /*imageView.post(() -> {
-                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(result, imageView.getWidth(),
-                        imageView.getHeight());
-                Glide.with(this).asBitmap().load(thumbnail).
-                        diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
 
-            });*/
         });
     }
 
@@ -128,19 +136,7 @@ public class ImagePreviewFragment extends Fragment {
         chooseAnother = rootView.findViewById(R.id.button_choose_another);
         recView = rootView.findViewById(R.id.recyclerView);
         linearLayout = rootView.findViewById(R.id.linearLayout);
-        /* Dynamical calculation of imageview size based on screen size
-        Display display = requireActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int screenWidth = size.x;
-        int screenHeight = size.y;
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageView.getLayoutParams();
-        params.width = (int) (0.85*screenWidth);
-        params.height = (int) (0.4*screenHeight);
-        params.gravity = Gravity.CENTER_HORIZONTAL;
-        params.topMargin = 50;
-        imageView.setLayoutParams(params);
-        */
+
         return rootView;
     }
 
@@ -151,10 +147,11 @@ public class ImagePreviewFragment extends Fragment {
     }
 
     protected void saveToDBAndFileSystem(List<ImageLabel> labels, float confidence){
+        //Stores the labeled image in the Files folder internal to the application generating a unique
+        // Uri using a timestamp, then saves the uri along with the labels and confidence in the database
         ContextWrapper cw = new ContextWrapper(requireActivity().getApplicationContext());
         // Save image in app specific folder
         String filename = String.format(Locale.ITALY, "%d.jpg", System.currentTimeMillis());
-
 
         TaskRunner taskRunner = new TaskRunner();
         taskRunner.executeAsync(new FileSaver(filename, cw, result), (Null) -> {
@@ -164,8 +161,10 @@ public class ImagePreviewFragment extends Fragment {
         Uri uri = Uri.fromFile(new File(cw.getFilesDir(), filename));
         MainActivity mainActivity = (MainActivity) requireActivity();
 
+        // Save image into runtime cache
         mainActivity.loadBitmap(uri, result);
 
+        // Retrieve database instance and insert new record
         ImagesDatabase imagesDB = mainActivity.imagesDB;
         ImagesDao imagesDao = imagesDB.imagesDao();
         imagesDao.insertImage(new LabeledImage(uri, labels, confidence))
@@ -190,6 +189,7 @@ public class ImagePreviewFragment extends Fragment {
                 });
     }
 
+    //Used to update user interface after image has been labeled
     protected void injectButton(boolean isSaveButton, List<ImageLabel> labels, float confidence) {
         Button button = new Button(requireContext());
         button.setTextColor(getResources().getColor(R.color.white, null));
@@ -212,6 +212,8 @@ public class ImagePreviewFragment extends Fragment {
         }
         linearLayout.addView(button);
     }
+
+    // Used to update user interface after image has been labeled
     protected void showResults(List<ImageLabel> labels, float confidence) {
         launchButton.setVisibility(View.GONE);
         chooseConf.setVisibility(View.GONE);
@@ -237,9 +239,9 @@ public class ImagePreviewFragment extends Fragment {
 
         injectButton(true, labels, confidence);
         injectButton(false, labels, confidence);
-
-
     }
+
+    // Creates the model using the selected confidence and show results
     protected void launchLabeler() {
         InputImage image = InputImage.fromBitmap(result, 0);
         float confidence = confSlider.getValue();
@@ -251,8 +253,7 @@ public class ImagePreviewFragment extends Fragment {
         ImageLabeler labeler = ImageLabeling.getClient(options);
         labeler.process(image)
                 .addOnSuccessListener(labels -> {
-                    // Task completed successfully
-
+                    // For debugging purposes
                     for (ImageLabel label : labels) {
                         String text = label.getText();
                         Log.d("TEXT", text);

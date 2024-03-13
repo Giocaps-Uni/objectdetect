@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.fragments;
 
 import android.os.Bundle;
 
@@ -14,12 +14,16 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 
+import com.example.objectdetect.R;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ButtonsFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * Simple fragment containing the first content when the application is opened
+ * Used to redirect the user to labeler or db
  */
-public class ButtonsFragment extends Fragment implements View.OnClickListener {
+public class ButtonsFragment extends Fragment {
 
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,8 +94,4 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 }

@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
@@ -16,12 +16,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.objectdetect.MainActivity;
+import com.example.objectdetect.R;
+import com.example.objectdetect.database.LabeledImage;
+import com.example.objectdetect.fragments.ItemFragment;
 import com.google.mlkit.vision.label.ImageLabel;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * Adapter used to inflate the recyclerview of {@link ItemFragment} with data retrieved from the db
+ *
+ */
 public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<LabeledImage> mValues;
@@ -46,6 +53,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Uri uri = mValues.get(position).uri;
         Log.d("HOLDERURI", mValues.get(position).uri.toString());
+        // Try to load the image from cache, if no entry is found load from disk
         final Bitmap bitmap = ((MainActivity) context).getBitmapFromMemCache(uri.toString());
         if (bitmap!=null)
             Glide.with(holder.image.getContext()).asBitmap().load(bitmap)
@@ -54,6 +62,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
             Glide.with(holder.image.getContext()).asBitmap().load(uri)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
         List<ImageLabel> imageLabels = mValues.get(position).labels;
+        // Calls getText on every ImageLabel element and joins the final string with a delimiter
         if (imageLabels.isEmpty())
             holder.labels.setText(R.string.no_labels_found);
         else
@@ -88,11 +97,11 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemRecyclerVi
             confidence = itemView.findViewById(R.id.dbconfidenceTextView);
         }
 
+        //Experimental
         public void bind(int id) {
             ViewCompat.setTransitionName(image, String.valueOf(id));
 
         }
-
 
     }
 }

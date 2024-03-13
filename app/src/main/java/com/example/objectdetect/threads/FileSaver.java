@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.threads;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -8,6 +8,9 @@ import android.util.Log;
 import java.io.FileOutputStream;
 import java.util.concurrent.Callable;
 
+/**
+ * Store an image in app-specific folder
+ */
 public class FileSaver implements Callable<Void> {
 
     private final String filename;
@@ -21,6 +24,7 @@ public class FileSaver implements Callable<Void> {
 
     @Override
     public Void call(){
+        // Images stored in jpeg format, quality doesn't deteriorate and saving is much faster
         try (FileOutputStream fileOutputStream = contextWrapper
                 .openFileOutput(filename, Context.MODE_PRIVATE)) {
             result.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);

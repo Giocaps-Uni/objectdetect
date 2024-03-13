@@ -10,7 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.LruCache;
 
+import com.example.objectdetect.database.ImagesDatabase;
+import com.example.objectdetect.utils.TaskRunner;
+
 import java.util.concurrent.Callable;
+
+/**
+ * Single activity architecture, main activity constains the fragment container view in fullscreen
+ * and holds the navigation resource
+ * ImagesDB -> an instance of the database to be used by every fragment
+ * Lrucache -> a runtime cache to store bitmap for a more efficient loading into imageviews
+ *  implemented as a dictionary with resource uri as key and bitmap of the image as value
+ */
 
 public class MainActivity extends AppCompatActivity {
 

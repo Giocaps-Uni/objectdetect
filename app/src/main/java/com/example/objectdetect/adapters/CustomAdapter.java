@@ -1,4 +1,4 @@
-package com.example.objectdetect;
+package com.example.objectdetect.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,10 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.objectdetect.R;
+import com.example.objectdetect.fragments.ImagePreviewFragment;
 import com.google.mlkit.vision.label.ImageLabel;
 
 import java.util.List;
 
+/**
+ * Adapter used for the label list recyclerview in {@link ImagePreviewFragment }
+ */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
 
     List<ImageLabel> labelList;

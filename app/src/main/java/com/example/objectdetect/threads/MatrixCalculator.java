@@ -1,11 +1,17 @@
-package com.example.objectdetect;
+package com.example.objectdetect.threads;
 
 import android.graphics.Matrix;
 
 import androidx.exifinterface.media.ExifInterface;
 
+import com.example.objectdetect.fragments.ImagePreviewFragment;
+
 import java.util.concurrent.Callable;
 
+/**
+ * Implements the rotation of an image chosen with the photopicker to show a corrected-oriented
+ * thumbnail in {@link ImagePreviewFragment}
+ */
 public class MatrixCalculator implements Callable<Matrix> {
     private final ExifInterface exif;
 
@@ -22,7 +28,7 @@ public class MatrixCalculator implements Callable<Matrix> {
 
     @Override
     public Matrix call() {
-        // Some long running task
+        // Get rotation from exif interface of the selected image and rotate
         int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL);
         int rotationInDegrees = exifToDegrees(rotation);
